@@ -52,7 +52,6 @@ public class PCAHelperTest {
         };
         PCAHelper.bubbleSort(array);
         
-        System.out.println("* Testing PCAHelper: bubbleSort");
         for (int i = 0; i < array.length - 1; ++i) {
             Pair<Vector, Double> former = array[i];
             Pair<Vector, Double> latter = array[i + 1];
@@ -101,16 +100,10 @@ public class PCAHelperTest {
         Pair<Vector, Double>[] eigenVectorsValues = new Pair[] {
             new Pair<>(Vector.fromArray(new double[] {1, 2, 3, 4, 5}), 10.0),
             new Pair<>(Vector.fromArray(new double[] {2, 3, 4, 5, 6}), 10.0),
-            new Pair<>(Vector.fromArray(new double[] {3, 4, 5, 6, 7}), 10.0),
-            new Pair<>(Vector.fromArray(new double[] {4, 5, 6, 7, 8}), 10.0),
-            new Pair<>(Vector.fromArray(new double[] {5, 6, 7, 8, 9}), 10.0)
         };
         Matrix expResult = DenseMatrix.from2DArray(new double[][] {
                 {1, 2, 3, 4, 5},
                 {2, 3, 4, 5, 6},
-                {3, 4, 5, 6, 7},
-                {4, 5, 6, 7, 8},
-                {5, 6, 7, 8, 9}
         });
         
         Matrix result = PCAHelper.convertEigenPairsToLa4jMatrix(eigenVectorsValues);
