@@ -89,4 +89,26 @@ public class TableDataSet {
     public int getNumOfRows() {
         return rows.size();
     }
+    
+    public double[][] to2dArrayRecordEach() {
+        double[][] array2d = new double[rows.size()][rows.get(0).second.length];
+        
+        for (int r = 0; r < array2d.length; ++r) 
+            System.arraycopy(rows.get(r).second, 0, array2d[r], 0, rows.get(r).second.length);
+        
+        return array2d;
+    }
+    
+    public double[][] to2dArrayFieldEach() {
+        double[][] array2d = new double[rows.get(0).second.length][rows.size()];
+        
+        for (int i = 0; i < rows.size(); ++i) {
+            double[] values = rows.get(i).second;
+            
+            for (int f = 0; f < values.length; ++f)
+                array2d[f][i] = values[f];
+        }
+        
+        return array2d;
+    }
 }
