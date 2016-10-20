@@ -40,6 +40,7 @@ public class PCAHelperTest {
     public void testBubbleSort() {
         System.out.println("bubbleSort");
         Pair[] array = new Pair[] {
+            new Pair<Vector, Double>(null, -26.0),
             new Pair<Vector, Double>(null, 0.5),
             new Pair<Vector, Double>(null, 1.5),
             new Pair<Vector, Double>(null, -15.0),
