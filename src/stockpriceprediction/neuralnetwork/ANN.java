@@ -102,6 +102,17 @@ public class ANN {
             ann[i] = new Layer(numPerEachLayer[i], numPerEachLayer[i - 1]);
         }
     }
+    
+    public ANN(int numOfInputs, int numOfLayers, double learningRate, int maxIterations,
+            int errorThreshold) {
+        NUM_INPUT = numOfInputs;
+        NUM_LAYER = numOfLayers;
+        ALPHA = learningRate;
+        NUM_LOOP = maxIterations;
+        THRESHOLD = errorThreshold;
+        
+        numPerEachLayer = new int[NUM_LAYER];
+    }
 
     public void readFile() {
         // TODO: for each line -> read to tuple 

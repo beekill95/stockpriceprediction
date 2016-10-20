@@ -54,8 +54,8 @@
         <Component class="stockpriceprediction.gui.NetworkModelPanel" name="networkModelPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="tab3">
-                <Property name="tabTitle" type="java.lang.String" value="tab3"/>
+              <JTabbedPaneConstraints tabName="Neural Network">
+                <Property name="tabTitle" type="java.lang.String" value="Neural Network"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

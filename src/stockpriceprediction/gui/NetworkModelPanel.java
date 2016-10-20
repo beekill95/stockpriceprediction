@@ -5,17 +5,103 @@
  */
 package stockpriceprediction.gui;
 
+import java.awt.event.ItemEvent;
+
 /**
  *
  * @author beekill
  */
 public class NetworkModelPanel extends javax.swing.JPanel {
 
+    private NeuralNetworkConfiguration defaultConfiguration;
+    
     /**
      * Creates new form NetworkModel
      */
     public NetworkModelPanel() {
         initComponents();
+        
+        numHiddenLayersComboBox.setSelectedIndex(2);
+    }
+    
+    public void setConfiguration(NeuralNetworkConfiguration defaultConfiguration, NeuralNetworkConfiguration configuration) {
+        this.defaultConfiguration = defaultConfiguration;
+        if (configuration == null)
+            displayConfiguration(defaultConfiguration);
+        else
+            displayConfiguration(configuration);
+    }
+    
+    private void displayConfiguration(NeuralNetworkConfiguration configuration) {
+        // display characteristics
+        displayCharacteristics(configuration);
+        
+        // display hidden layer count and each node per layer
+        displayHiddenLayers(configuration);
+        
+        // display validation
+        displayValidation(configuration);
+    }
+    
+    private void displayCharacteristics(NeuralNetworkConfiguration configuration) {
+        learningRateText.setText(String.valueOf(configuration.getLearningRate()));
+        maxIternationText.setText(String.valueOf(configuration.getMaxIterations()));
+        trainingErrorText.setText(String.valueOf(configuration.getTrainingError()));
+        learningMomentumText.setText(String.valueOf(configuration.getLearningMomentum()));
+    }
+    
+    private void displayHiddenLayers(NeuralNetworkConfiguration configuration) {
+        int hiddenLayerCount = configuration.getNumOfHiddenLayers();
+        numHiddenLayersComboBox.setSelectedIndex(hiddenLayerCount - 1);
+        
+        int[] nodes = configuration.getHiddenLayerNodes();
+        layerOneText.setText(String.valueOf(nodes[0]));
+        
+        if (hiddenLayerCount < 3)
+            layerTwoText.setText(String.valueOf(nodes[1]));
+        if (hiddenLayerCount < 4)
+            layerThreeText.setText(String.valueOf(nodes[2]));
+        if (hiddenLayerCount == 4)
+            layerFourText.setText(String.valueOf(nodes[3]));
+    }
+    
+    private void displayValidation(NeuralNetworkConfiguration configuration) {
+        trainingErrorText.setText(String.valueOf(configuration.getTrainingPercentage()));
+    }
+    
+    public NeuralNetworkConfiguration getCurrentConfiguration() {
+        
+        try {
+            double learningRate = Double.parseDouble(learningRateText.getText());
+            int maxIterations = Integer.parseInt(maxIternationText.getText());
+            double trainingError = Double.parseDouble(trainingErrorText.getText());
+            double learningMomentum = Double.parseDouble(learningMomentumText.getText());
+            
+            int numOfHiddenLayers = numHiddenLayersComboBox.getSelectedIndex() + 1;
+            int[] hiddenLayerNodes = getHiddenLayersNode(numOfHiddenLayers);
+            
+            double trainingPercentage = Double.parseDouble(traningPercentageText.getText());
+        
+            return new NeuralNetworkConfiguration(learningRate, maxIterations, trainingError, learningMomentum, numOfHiddenLayers, hiddenLayerNodes, trainingPercentage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return null;
+        }
+    }
+    
+    private int[] getHiddenLayersNode(int numOfHiddenLayers) {
+        int[] nodes = new int[numOfHiddenLayers];
+        
+        nodes[0] = Integer.parseInt(layerOneText.getText());
+        if (numOfHiddenLayers > 1)
+            nodes[1] = Integer.parseInt(layerTwoText.getText());
+        if (numOfHiddenLayers > 2)
+            nodes[2] = Integer.parseInt(layerThreeText.getText());
+        if (numOfHiddenLayers > 3)
+            nodes[3] = Integer.parseInt(layerFourText.getText());
+        
+        return nodes;
     }
 
     /**
@@ -29,13 +115,13 @@ public class NetworkModelPanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        learningRateText = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        maxIternationText = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        learningMomentumText = new javax.swing.JTextField();
+        trainingErrorText = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         numHiddenLayersComboBox = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -56,25 +142,25 @@ public class NetworkModelPanel extends javax.swing.JPanel {
 
         jLabel7.setText("Learning Rate: ");
 
-        jTextField1.setText("0.0001");
-        jTextField1.setPreferredSize(new java.awt.Dimension(100, 19));
+        learningRateText.setText("0.0001");
+        learningRateText.setPreferredSize(new java.awt.Dimension(100, 19));
 
         jLabel8.setText("Max Iterations:");
 
-        jTextField2.setText("100");
-        jTextField2.setPreferredSize(new java.awt.Dimension(100, 19));
+        maxIternationText.setText("100");
+        maxIternationText.setPreferredSize(new java.awt.Dimension(100, 19));
 
         jLabel9.setText("Learning Momentum:");
 
         jLabel10.setText("Training Error:");
 
-        jTextField3.setEditable(false);
-        jTextField3.setText("0.3");
-        jTextField3.setPreferredSize(new java.awt.Dimension(100, 19));
+        learningMomentumText.setEditable(false);
+        learningMomentumText.setText("0.3");
+        learningMomentumText.setPreferredSize(new java.awt.Dimension(100, 19));
 
-        jTextField4.setEditable(false);
-        jTextField4.setText("0.5");
-        jTextField4.setPreferredSize(new java.awt.Dimension(100, 19));
+        trainingErrorText.setEditable(false);
+        trainingErrorText.setText("0.5");
+        trainingErrorText.setPreferredSize(new java.awt.Dimension(100, 19));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -87,16 +173,16 @@ public class NetworkModelPanel extends javax.swing.JPanel {
                     .addComponent(jLabel10))
                 .addGap(47, 47, 47)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(trainingErrorText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(learningRateText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(110, 110, 110)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(maxIternationText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(learningMomentumText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(43, 43, 43))
         );
         jPanel1Layout.setVerticalGroup(
@@ -105,21 +191,26 @@ public class NetworkModelPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(learningRateText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(maxIternationText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(learningMomentumText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(trainingErrorText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Hidden Layers"));
 
         numHiddenLayersComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4" }));
+        numHiddenLayersComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                numHiddenLayersComboBoxItemStateChanged(evt);
+            }
+        });
 
         jLabel1.setText("Number of hidden layers:");
 
@@ -196,6 +287,11 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         );
 
         defaultButton.setText("Default");
+        defaultButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                defaultButtonActionPerformed(evt);
+            }
+        });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Validation"));
 
@@ -255,6 +351,21 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void defaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultButtonActionPerformed
+        displayConfiguration(defaultConfiguration);
+    }//GEN-LAST:event_defaultButtonActionPerformed
+
+    private void numHiddenLayersComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_numHiddenLayersComboBoxItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            int currentlySelectedNumber = numHiddenLayersComboBox.getSelectedIndex() + 1;
+            
+            layerOneText.setEnabled(true);
+            layerTwoText.setEnabled(currentlySelectedNumber > 1);
+            layerThreeText.setEnabled(currentlySelectedNumber > 2);
+            layerFourText.setEnabled(currentlySelectedNumber > 3);
+        }
+    }//GEN-LAST:event_numHiddenLayersComboBoxItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton defaultButton;
@@ -271,15 +382,15 @@ public class NetworkModelPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField layerFourText;
     private javax.swing.JTextField layerOneText;
     private javax.swing.JTextField layerThreeText;
     private javax.swing.JTextField layerTwoText;
+    private javax.swing.JTextField learningMomentumText;
+    private javax.swing.JTextField learningRateText;
+    private javax.swing.JTextField maxIternationText;
     private javax.swing.JComboBox<String> numHiddenLayersComboBox;
+    private javax.swing.JTextField trainingErrorText;
     private javax.swing.JTextField traningPercentageText;
     // End of variables declaration//GEN-END:variables
 }

@@ -55,7 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jTabbedPane1.addTab("tab3", networkModelPanel);
+        jTabbedPane1.addTab("Neural Network", networkModelPanel);
         jTabbedPane1.addTab("Data Set", dataSetPanel);
         jTabbedPane1.addTab("Result", resultPanel);
 
