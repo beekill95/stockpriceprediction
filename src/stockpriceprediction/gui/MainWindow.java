@@ -46,6 +46,7 @@ public class MainWindow extends javax.swing.JFrame {
         networkModelPanel = new stockpriceprediction.gui.NetworkModelPanel();
         dataSetPanel = new stockpriceprediction.gui.DataSetPanel();
         resultPanel = new stockpriceprediction.gui.ResultPanel();
+        statusLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -54,30 +55,29 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout networkModelPanelLayout = new javax.swing.GroupLayout(networkModelPanel);
-        networkModelPanel.setLayout(networkModelPanelLayout);
-        networkModelPanelLayout.setHorizontalGroup(
-            networkModelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 743, Short.MAX_VALUE)
-        );
-        networkModelPanelLayout.setVerticalGroup(
-            networkModelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 458, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Network Model", networkModelPanel);
+        jTabbedPane1.addTab("tab3", networkModelPanel);
         jTabbedPane1.addTab("Data Set", dataSetPanel);
         jTabbedPane1.addTab("Result", resultPanel);
+
+        statusLabel.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1)
+                    .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusLabel))
         );
 
         pack();
@@ -134,5 +134,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private stockpriceprediction.gui.NetworkModelPanel networkModelPanel;
     private stockpriceprediction.gui.ResultPanel resultPanel;
+    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 }
