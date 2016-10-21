@@ -14,8 +14,13 @@ import java.io.File;
 public class MainWindow extends javax.swing.JFrame {
 
     private javax.swing.JFrame parent;
-    
     private File networkModelFile;
+    
+    private final NeuralNetworkConfiguration defaultConfiguration = new NeuralNetworkConfiguration(
+                0.1, 300, 0.4, 0.9,
+                2, new int[]{50, 40, 100, 50},
+                0.8
+    );
     
     /**
      * Creates new form MainWindow
@@ -24,6 +29,7 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
         
         this.parent = parent;
+        networkModelPanel.setConfiguration(defaultConfiguration, null);
     }
     
     public MainWindow(javax.swing.JFrame parent, File networkModelFile) {
@@ -49,6 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
         statusLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Stock Price Prediction");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -75,7 +82,7 @@ public class MainWindow extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusLabel))
         );

@@ -57,11 +57,11 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         int[] nodes = configuration.getHiddenLayerNodes();
         layerOneText.setText(String.valueOf(nodes[0]));
         
-        if (hiddenLayerCount < 3)
+        if (hiddenLayerCount > 1)
             layerTwoText.setText(String.valueOf(nodes[1]));
-        if (hiddenLayerCount < 4)
+        if (hiddenLayerCount > 2)
             layerThreeText.setText(String.valueOf(nodes[2]));
-        if (hiddenLayerCount == 4)
+        if (hiddenLayerCount > 3)
             layerFourText.setText(String.valueOf(nodes[3]));
     }
     
