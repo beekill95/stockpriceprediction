@@ -5,7 +5,6 @@
  */
 package stockpriceprediction.neuralnetwork;
 
-import java.util.Scanner;
 
 /**
  *
@@ -75,11 +74,11 @@ public class ANN {
 
     public ANN() {
         // TODO: read from config
-        NUM_INPUT = 1;
+        NUM_INPUT = 2;
         NUM_LAYER = 2;
         ALPHA = 0.5;
         NUM_LOOP = 100000000;
-        THRESHOLD = 1;
+        THRESHOLD = 13;
         numPerEachLayer = new int[NUM_LAYER];
 
         // hidden layer
@@ -103,27 +102,14 @@ public class ANN {
         }
     }
 
-    public void readFile() {
-        // TODO: for each line -> read to tuple 
-        // how to reserve memory
-//        // fibo
-//        int[] f = genFibo();
-//        table = new Tuple[f.length - 2];
-//        double x1 = 1.0 / f[f.length - 3];
-//        double x2 = 1.0 / f[f.length - 2];
-//        double x3 = 1.0 / f[f.length - 1];
-//        for (int i = 0; i < table.length; i++) {
-//            double [] t = {f[i] * x1, (f[i + 1] - 1) * x2, (f[i + 2] - 1) * x3};
-//            table[i] = new Tuple(t);
-//        }
-
-        table = new Tuple[100];
-        double x1 = 1.0 / table.length;
-        for (int i = 1; i < table.length + 1; i++) {
-            double[] t = {i * x1, i * x1};
-            table[i - 1] = new Tuple(t);
+    public void readFile(double[][] arr) {
+        // each row is a tuple
+        table = new Tuple[arr.length];
+        for (int row = 0; row < arr.length; row++) {
+            table[row] = new Tuple(arr[row]);
         }
     }
+    public double min = 100;
 
     public void run() {
         for (int loop = 0; loop < NUM_LOOP; loop++) {
@@ -202,10 +188,14 @@ public class ANN {
                 }
                 double out = ann[NUM_LAYER - 1].outputArr[0];
                 double t = table[row].row[table[row].numInput - 1];
-                sumEr += Math.pow(out - t, 2.0) / 2;
+                sumEr += Math.abs(out - t);
             }
             // stop training condition
-    //        System.out.println("sum err: " + sumEr);
+            //        System.out.println("sum err: " + sumEr);
+            if (min > sumEr) {
+                min = sumEr;
+                System.out.println(" min: " + min);
+            }
             if (sumEr < THRESHOLD) {
                 System.out.println("STOP WITH THRESHOLD");
                 break;
@@ -224,26 +214,10 @@ public class ANN {
         return fibo;
     }
 
-    public void predict() {
-//        // fibo
-//        int[] f = genFibo();
-//        double x1 = 1.0 / f[f.length - 3];
-//        double x2 = 1.0 / f[f.length - 2];
-//        double x3 = 1.0 / f[f.length - 1];
-//
-//        int N1 = 10,
-//                N2 = N1 + 1,
-//                n3 = N1 + 2;
-//        double [] t = {f[N1] * x1, (f[N2] - 1) * x2, (f[n3] - 1) * x3};
-        double x1 = 1.0 / 1000;
-        int n1 = 0;
-        while (true) {
-            Scanner in = new Scanner(System.in);
-            System.out.println("input n1: ");
-            n1 = in.nextInt();
-            double[] t = {n1 * x1,};
-            Tuple tuple = new Tuple(t);
-
+    public void predict(double[][] arr) {
+        // 
+        for (int row = 0; row < arr.length; row++) {
+            Tuple tuple = new Tuple(arr[row]);
             for (int i = 0; i < NUM_LAYER; i++) {
                 if (i == 0) {
                     ann[i].copy(tuple);
@@ -254,16 +228,17 @@ public class ANN {
                     ann[i].outputArr[j] = ann[i].perceptronLst[j].getOutput(ann[i].inputArr);
                 }
             }
-            System.out.println("Output is: " + ann[NUM_LAYER - 1].outputArr[0] / x1 + 1);
             System.out.println("Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
         }
     }
 
     public static void main(String[] args) {
         ANN ann = new ANN();
-        ann.readFile();
+        double[][] arr = {{1, 2, 3}};
+        ann.readFile(arr);
         ann.run();
-        ann.predict();
+        System.out.println("min is: " + ann.min);
+        ann.predict(arr);
 
     }
 }
