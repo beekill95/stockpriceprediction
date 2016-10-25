@@ -8,11 +8,15 @@ package stockpriceprediction.gui;
 import javax.swing.JFileChooser;
 
 import java.io.File;
+import jdk.nashorn.internal.runtime.RewriteException;
+import org.la4j.Vector;
 
 import stockpriceprediction.dataloader.TableDataSet;
 import stockpriceprediction.dataloader.CsvDataSetLoader;
 
 import stockpriceprediction.helper.Pair;
+
+import stockpriceprediction.pca.PCA;
 
 /**
  *
@@ -20,6 +24,8 @@ import stockpriceprediction.helper.Pair;
  */
 public class DataSetPanel extends javax.swing.JPanel {
 
+    private PCA pca;
+    
     /**
      * Creates new form DataSetPanel
      */
@@ -68,15 +74,23 @@ public class DataSetPanel extends javax.swing.JPanel {
 
         dataTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Date", "Open", "High", "Low", "Close", "Volume", "Adj Close"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(dataTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -109,15 +123,23 @@ public class DataSetPanel extends javax.swing.JPanel {
 
         principalComponentsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Eige.", "Con.r", "C-con.r"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(principalComponentsTable);
 
         dataInPCATable.setModel(new javax.swing.table.DefaultTableModel(
@@ -204,6 +226,8 @@ public class DataSetPanel extends javax.swing.JPanel {
     private void loadAndDisplayDataSet(File dataSetFile) {
         dataSet = loadDataSet(dataSetFile);
         displayDataSetInDataTable(dataSet);
+        
+        calculateAndDisplayPCAResult(dataSet);
     }
     
     private TableDataSet loadDataSet(File dataSetFile) {
@@ -219,7 +243,11 @@ public class DataSetPanel extends javax.swing.JPanel {
         else
             columnNames = dataSet.getColumnNames();
         
-        dataTable.setModel(new javax.swing.table.DefaultTableModel(
+        displayDataSetInTable(data, columnNames, dataTable);
+    }
+    
+    private void displayDataSetInTable(Object[][] data, String[] columnNames, javax.swing.JTable table) {
+        table.setModel(new javax.swing.table.DefaultTableModel(
                 data, columnNames
         ));
     }
@@ -245,6 +273,59 @@ public class DataSetPanel extends javax.swing.JPanel {
         }
         
         return data;
+    }
+    
+    private void calculateAndDisplayPCAResult(TableDataSet dataSet) {
+        pca = new PCA(dataSet.to2dArrayFieldEach(), 0.9);
+        
+        displayEigenValuesAndItsContribution(pca.getEigenVectorsValues());
+    }
+    
+    private void displayEigenValuesAndItsContribution(Pair<Vector, Double>[] eigenVectorValuePairs) {
+        double[] eigenValues = getEigenValues(eigenVectorValuePairs);
+        
+        double[][] table = calculateEigenVectorContributionAndCummulativeContribution(eigenValues);
+        displayDataSetInTable(toObjectArray(table), new String[] {"Eige.", "Con.r", "C-con.r"}, principalComponentsTable);
+    }
+    
+    private Object[][] toObjectArray(double[][] data) {
+        Object[][] objectses = new Object[data.length][data[0].length];
+        
+        for (int i = 0; i < objectses.length; ++i)
+            for (int j = 0; j < objectses[i].length; ++j)
+                objectses[i][j] = data[i][j];
+        
+        return objectses;
+    }
+    
+    private double[] getEigenValues(Pair<Vector, Double>[] pairs) {
+        double[] eigenValues = new double[pairs.length];
+        
+        for (int i = 0; i < pairs.length; ++i)
+            eigenValues[i] = pairs[i].second;
+        
+        return eigenValues;
+    }
+    
+    private double[][] calculateEigenVectorContributionAndCummulativeContribution(double[] eigenValues) {
+        double[][] table = new double[eigenValues.length][3];
+        
+        double sumResult = sum(eigenValues);
+        
+        for (int i = 0; i < eigenValues.length; ++i) {
+            table[i][0] = eigenValues[i];
+            table[i][1] = eigenValues[i] / sumResult * 100;
+            table[i][2] = (i == 0) ? table[0][1] : table[i - 1][2] + table[i][1];
+        }
+        
+        return table;
+    }
+    
+    private static double sum(double[] values) {
+        double result = 0.0;
+        for (int i = 0; i < values.length; ++i)
+            result += values[i];
+        return result;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
