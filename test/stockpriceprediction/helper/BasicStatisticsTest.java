@@ -46,9 +46,9 @@ public class BasicStatisticsTest {
     public void testStandardDeviation() {
         System.out.println("standardDeviation");
         double[] values = new double[] {2.1, 2.5, 4.0, 3.6};
-        double expResult = 0.776208735;
+        double expResult = 0.8962886;
         double result = BasicStatistics.standardDeviation(values);
-        assertEquals(expResult, result, 0.000000005);
+        assertEquals(expResult, result, 0.00005);
     }
 
     /**
@@ -58,9 +58,9 @@ public class BasicStatisticsTest {
     public void testVariance() {
         System.out.println("variance");
         double[] values = new double[] {2.1, 2.5, 4.0, 3.6};
-        double expResult = 0.6025;
+        double expResult = 0.80333;
         double result = BasicStatistics.variance(values);
-        assertEquals(expResult, result, 0.0);
+        assertEquals(expResult, result, 0.000005);
     }
 
     /**
@@ -112,4 +112,23 @@ public class BasicStatisticsTest {
         }
     }
     
+    @Test
+    public void testCorrelationMatrix() {
+        System.out.println("correlationMatrix");
+        double[][] values = new double[][] {
+            {1, 4, 7},
+            {6, 5, 4},
+            {9, 5, 1}
+        };
+        double[][] expResult = new double[][] {
+            {1, -1, -1},
+            {-1, 1, 1},
+            {-1, 1, 1}
+        };
+        double[][] result = BasicStatistics.correlationMatrix(values);
+        
+        for (int i = 0; i < expResult.length; ++i) {
+            assertArrayEquals(expResult[i], result[i], 0.00005);
+        }
+    }
 }

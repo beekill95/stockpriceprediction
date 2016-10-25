@@ -26,13 +26,16 @@ public class BasicStatistics {
     public static double variance(final double[] values) {
         double mean = mean(values);
         double[] meanSubstractedValues = values.clone();
+        double sum = 0.0;
         
         for (int i = 0; i < meanSubstractedValues.length; ++i) {
             double tmp = mean - values[i];
             meanSubstractedValues[i] = tmp * tmp;
+            sum += meanSubstractedValues[i];
         }
         
-        return mean(meanSubstractedValues);
+        //return mean(meanSubstractedValues);
+        return sum / (meanSubstractedValues.length - 1);
     }
     
     public static double covariance(final double[] x, final double[] y) {
@@ -51,8 +54,8 @@ public class BasicStatistics {
         double sdX = standardDeviation(x);
         double sdY = standardDeviation(y);
         
-        sdX = Math.sqrt(sdX * sdX * x.length / (x.length - 1));
-        sdY = Math.sqrt(sdY * sdY * y.length / (y.length - 1));
+        //sdX = Math.sqrt(sdX * sdX * x.length / (x.length - 1));
+        //sdY = Math.sqrt(sdY * sdY * y.length / (y.length - 1));
         
         return cov / (sdX * sdY);
     }
@@ -69,5 +72,19 @@ public class BasicStatistics {
         }
         
         return covarianceMatrix;
+    }
+    
+    public static double[][] correlationMatrix(final double[][] values) {
+        double correlationMatrix[][] = new double[values.length][values.length];
+        
+        for (int row = 0; row < values.length; ++row) {
+            double[] x = values[row];
+            for (int col = 0; col < values.length; ++col) {
+                double[] y = values[col];
+                correlationMatrix[row][col] = correlation(x, y);
+            }
+        }
+        
+        return correlationMatrix;
     }
 }
