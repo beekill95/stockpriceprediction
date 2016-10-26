@@ -8,7 +8,6 @@ package stockpriceprediction.gui;
 import javax.swing.JFileChooser;
 
 import java.io.File;
-import jdk.nashorn.internal.runtime.RewriteException;
 import org.la4j.Vector;
 
 import stockpriceprediction.dataloader.TableDataSet;
@@ -25,6 +24,7 @@ import stockpriceprediction.pca.PCA;
 public class DataSetPanel extends javax.swing.JPanel {
 
     private PCA pca;
+    private double[][] dataSetInReducedPca;
     
     /**
      * Creates new form DataSetPanel
@@ -91,6 +91,7 @@ public class DataSetPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        dataTable.setEnabled(false);
         jScrollPane1.setViewportView(dataTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -99,7 +100,7 @@ public class DataSetPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 805, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -140,6 +141,7 @@ public class DataSetPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        principalComponentsTable.setEnabled(false);
         jScrollPane2.setViewportView(principalComponentsTable);
 
         dataInPCATable.setModel(new javax.swing.table.DefaultTableModel(
@@ -153,6 +155,7 @@ public class DataSetPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        dataInPCATable.setEnabled(false);
         jScrollPane3.setViewportView(dataInPCATable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -161,9 +164,9 @@ public class DataSetPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -277,8 +280,21 @@ public class DataSetPanel extends javax.swing.JPanel {
     
     private void calculateAndDisplayPCAResult(TableDataSet dataSet) {
         pca = new PCA(dataSet.to2dArrayFieldEach(), 0.9);
+        dataSetInReducedPca = pca.getDataInReducedPrincipalComponents();
         
         displayEigenValuesAndItsContribution(pca.getEigenVectorsValues());
+        displayDataSetInReducedPca();
+    }
+    
+    private void displayDataSetInReducedPca() {
+        Object[][] objectses = toObjectArray(dataSetInReducedPca);
+        objectses = transpose(objectses);
+        
+        String[] tableHeaders = new String[dataSetInReducedPca.length];
+        for (int i = 0; i < tableHeaders.length; ++i)
+            tableHeaders[i] = "PCA #" + String.valueOf(i);
+        
+        displayDataSetInTable(objectses, tableHeaders, dataInPCATable);
     }
     
     private void displayEigenValuesAndItsContribution(Pair<Vector, Double>[] eigenVectorValuePairs) {
@@ -326,6 +342,18 @@ public class DataSetPanel extends javax.swing.JPanel {
         for (int i = 0; i < values.length; ++i)
             result += values[i];
         return result;
+    }
+    
+    private static Object [][] transpose(Object [][] values) {
+        int rows = values.length;
+        int cols = values[0].length;
+        Object[][] transposed = new Object[cols][rows];
+        
+        for (int r = 0; r < cols; ++r)
+            for (int c = 0; c < rows; ++c)
+                transposed[r][c] = values[c][r];
+        
+        return transposed;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
