@@ -5,7 +5,6 @@
  */
 package stockpriceprediction.neuralnetwork;
 
-
 /**
  *
  * @author Van
@@ -14,14 +13,17 @@ public class ANN {
 
     private class Tuple {
 
-        double[] row;
+        double[] inputArr;
+        double expectedOutput;
         int numInput;
 
         public Tuple(double[] input) {
+            // pass row including output -> 
             numInput = input.length - 1;
-            row = new double[numInput + 1];
-            for (int i = 0; i < numInput + 1; i++) {
-                row[i] = input[i];
+            inputArr = new double[numInput];
+            expectedOutput = input[input.length - 1];
+            for (int i = 0; i < numInput; i++) {
+                inputArr[i] = input[i];
             }
         }
     };
@@ -46,7 +48,7 @@ public class ANN {
         // this function use to input data to first layer
         public void copy(Tuple row) {
             for (int i = 0; i < row.numInput; i++) {
-                inputArr[i] = row.row[i];
+                inputArr[i] = row.inputArr[i];
             }
         }
 
@@ -74,19 +76,19 @@ public class ANN {
 
     public ANN() {
         // TODO: read from config
-        NUM_INPUT = 2;
+        NUM_INPUT = 1;
         NUM_LAYER = 2;
         ALPHA = 0.5;
-        NUM_LOOP = 100000000;
-        THRESHOLD = 13;
+        NUM_LOOP = 10000;
+        THRESHOLD = 0.003;
         numPerEachLayer = new int[NUM_LAYER];
 
         // hidden layer
         numPerEachLayer[0] = 4;
         // maybe put some layer here
         // .....
-//        numPerEachLayer[1] = 10;
-//        numPerEachLayer[2] = 5;
+        //    numPerEachLayer[1] = 10;
+        //     numPerEachLayer[2] = 5;
         // last layer is the ouput
         numPerEachLayer[NUM_LAYER - 1] = 1;
 
@@ -101,17 +103,6 @@ public class ANN {
             ann[i] = new Layer(numPerEachLayer[i], numPerEachLayer[i - 1]);
         }
     }
-    
-    public ANN(int numOfInputs, int numOfLayers, double learningRate, int maxIterations,
-            int errorThreshold) {
-        NUM_INPUT = numOfInputs;
-        NUM_LAYER = numOfLayers;
-        ALPHA = learningRate;
-        NUM_LOOP = maxIterations;
-        THRESHOLD = errorThreshold;
-        
-        numPerEachLayer = new int[NUM_LAYER];
-    }
 
     public void readFile(double[][] arr) {
         // each row is a tuple
@@ -120,7 +111,7 @@ public class ANN {
             table[row] = new Tuple(arr[row]);
         }
     }
-    public double min = 100;
+    public double min = Double.MAX_VALUE;
 
     public void run() {
         for (int loop = 0; loop < NUM_LOOP; loop++) {
@@ -150,8 +141,9 @@ public class ANN {
                 // error for output(last) layer
                 for (int j = 0; j < ann[NUM_LAYER - 1].numPerceptrons; j++) {
                     double output = ann[NUM_LAYER - 1].outputArr[j];
-                    ann[NUM_LAYER - 1].perceptronLst[j].error = output * (1 - output) * (table[row].row[table[row].numInput - 1] - output);
-                    //               System.out.println("input: " + table[row].row[0] + " expected: " + table[row].row[table[row].numInput]);
+                    ann[NUM_LAYER - 1].perceptronLst[j].error = output * (1 - output) * (table[row].expectedOutput - output);
+                    //                            System.out.println("input: " + table[row].row[0] + " expected: " + table[row].row[table[row].numInput]);
+   //                 System.out.println("Input: " + table[row].expectedOutput + " output: " + output);
                 }
 
                 // compute error for hidden layer
@@ -171,9 +163,8 @@ public class ANN {
                 // update weight and bias
                 for (int i = 0; i < NUM_LAYER; i++) {
                     for (int j = 0; j < ann[i].numPerceptrons; j++) {
-                        double deltaWeight = ALPHA * ann[i].perceptronLst[j].error * ann[i].outputArr[j];
-//                        System.out.println("delta w: " + deltaWeight + "err: "+ann[i].perceptronLst[j].error + " out "+ann[i].outputArr[j]);
                         for (int k = 0; k < ann[i].perceptronLst[j].w.length; k++) {
+                            double deltaWeight = ALPHA * ann[i].perceptronLst[j].error * ann[i].inputArr[k];
                             ann[i].perceptronLst[j].w[k] += deltaWeight;
                         }
 //                        ann[i].perceptronLst[j].error += deltaWeight;
@@ -198,7 +189,7 @@ public class ANN {
                     }
                 }
                 double out = ann[NUM_LAYER - 1].outputArr[0];
-                double t = table[row].row[table[row].numInput - 1];
+                double t = table[row].expectedOutput;
                 sumEr += Math.abs(out - t);
             }
             // stop training condition
@@ -207,7 +198,7 @@ public class ANN {
                 min = sumEr;
                 System.out.println(" min: " + min);
             }
-            if (sumEr < THRESHOLD) {
+            if (sumEr <= THRESHOLD) {
                 System.out.println("STOP WITH THRESHOLD");
                 break;
             }
@@ -236,19 +227,39 @@ public class ANN {
                     ann[i].copy(ann[i - 1].outputArr);
                 }
                 for (int j = 0; j < ann[i].numPerceptrons; j++) {
+//                    System.out.println("weight");
+//                    for (int n = 0; n < ann[i].perceptronLst[j].w.length; n++) {
+//                        System.out.print(" " + ann[i].perceptronLst[j].w[n]);
+//                    }
                     ann[i].outputArr[j] = ann[i].perceptronLst[j].getOutput(ann[i].inputArr);
+//                    System.out.print(" " + ann[i].outputArr[j]);
+//                    System.out.println("");
                 }
             }
-            System.out.println("Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
+            System.out.println("expected: "+ tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
+            System.out.println("expected: "+ row + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]*1000);
         }
+    }
+
+    public static double[][] genTest() {
+        double arr[][] = new double[1000][2];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i][0] = (double)i / 1000;
+            arr[i][1] = (double)i / 1000;
+            //      System.out.println(arr[i][1]);
+        }
+        return arr;
     }
 
     public static void main(String[] args) {
         ANN ann = new ANN();
-        double[][] arr = {{1, 2, 3}};
+        //    double[][] arr = {{1, 0, 0}, {0, 1, 0}, {1, 1, 1}, {0, 0, 0}};
+        // gen test
+        double[][] arr = genTest();
         ann.readFile(arr);
         ann.run();
-        System.out.println("min is: " + ann.min);
+
+        //     double[][] arr1 = {{1, 1, 0}, {1, 0, 0}, {0, 1, 0}, {0, 0, 0}};
         ann.predict(arr);
 
     }
