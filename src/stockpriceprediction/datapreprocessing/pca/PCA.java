@@ -75,6 +75,19 @@ public class PCA {
         return dataSetInPC.toDenseMatrix().toArray();
     }
     
+    public double[] calculateDataInPCA(final double[] data) {
+        // convert to matrix
+        Matrix eigenVectorsMatrix = PCAHelper.convertEigenPairsToLa4jMatrix(reducedEigenVectorsValues);
+        
+        // convert data to matrix
+        Vector vector = Vector.fromArray(data);
+        
+        // convert to principal componenents
+        Vector dataInPCA = eigenVectorsMatrix.multiply(vector);
+        
+        return dataInPCA.toDenseVector().toArray();
+    }
+    
     // making public for testing
     public Pair<Vector, Double>[] calculateEigenvectorsAndEigenvalues(double[][] matrix) {
         DenseMatrix covarianceMatrix = DenseMatrix.from2DArray(matrix);

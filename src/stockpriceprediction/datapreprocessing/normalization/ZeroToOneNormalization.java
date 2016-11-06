@@ -43,6 +43,26 @@ public class ZeroToOneNormalization implements DataNormalization {
         
         return normalizedData * (max - min) + min;
     }
+
+    @Override
+    public double[] normalizeNewData(double[] data) {
+        double[] normalizedData = new double[data.length];
+        
+        for (int field = 0; field < data.length; ++field)
+            normalizedData[field] = normalizeNewData(field, data[field]);
+        
+        return normalizedData;
+    }
+
+    @Override
+    public double[] toOriginalData(double[] normalizedData) {
+        double[] originalData = new double[normalizedData.length];
+        
+        for (int field = 0; field < normalizedData.length; ++field)
+            originalData[field] = toOriginalData(field, normalizedData[field]);
+        
+        return originalData;
+    }
     
     private void findMaximums(double[][] data) {
         maximums = new double[data.length];

@@ -45,6 +45,24 @@ public class ZeroMeanOneVarianceNormalization implements DataNormalization {
         return normalizedData * variance + mean;
     }
 
+    @Override
+    public double[] normalizeNewData(double[] data) {
+        double[] normalizedData = new double[data.length];
+        for (int field = 0; field < data.length; ++field)
+            normalizedData[field] = normalizeNewData(field, data[field]);
+        
+        return normalizedData;
+    }
+
+    @Override
+    public double[] toOriginalData(double[] normalizedData) {
+        double[] originalData = new double[normalizedData.length];
+        for (int field = 0; field < originalData.length; ++field)
+            originalData[field] = toOriginalData(field, normalizedData[field]);
+        
+        return originalData;
+    }
+
     private void findMeans(double[][] data) {
         means = new double[data.length];
         for (int i = 0; i < means.length; ++i)
