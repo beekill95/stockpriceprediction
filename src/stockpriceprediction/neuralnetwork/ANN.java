@@ -5,6 +5,9 @@
  */
 package stockpriceprediction.neuralnetwork;
 
+import stockpriceprediction.helper.Pair;
+import java.util.Arrays;
+
 /**
  *
  * @author Van
@@ -68,6 +71,7 @@ public class ANN {
     final int NUM_LOOP;
     final double ALPHA;
     final double THRESHOLD;
+    final double DELTA_THRESHOLD;
     final int[] numPerEachLayer;
     // table for storing training data
     Tuple[] table;
@@ -78,16 +82,17 @@ public class ANN {
         // TODO: read from config
         NUM_INPUT = 1;
         NUM_LAYER = 2;
-        ALPHA = 0.5;
-        NUM_LOOP = 10000;
+        ALPHA = 0.8;
+        NUM_LOOP = 1000000;
         THRESHOLD = 0.003;
+        DELTA_THRESHOLD = 0.0000001;
         numPerEachLayer = new int[NUM_LAYER];
 
         // hidden layer
         numPerEachLayer[0] = 4;
         // maybe put some layer here
         // .....
-        //    numPerEachLayer[1] = 10;
+        //   numPerEachLayer[1] = 10;
         //     numPerEachLayer[2] = 5;
         // last layer is the ouput
         numPerEachLayer[NUM_LAYER - 1] = 1;
@@ -143,7 +148,7 @@ public class ANN {
                     double output = ann[NUM_LAYER - 1].outputArr[j];
                     ann[NUM_LAYER - 1].perceptronLst[j].error = output * (1 - output) * (table[row].expectedOutput - output);
                     //                            System.out.println("input: " + table[row].row[0] + " expected: " + table[row].row[table[row].numInput]);
-   //                 System.out.println("Input: " + table[row].expectedOutput + " output: " + output);
+                    //                 System.out.println("Input: " + table[row].expectedOutput + " output: " + output);
                 }
 
                 // compute error for hidden layer
@@ -192,9 +197,14 @@ public class ANN {
                 double t = table[row].expectedOutput;
                 sumEr += Math.abs(out - t);
             }
+            sumEr /= table.length;
             // stop training condition
             //        System.out.println("sum err: " + sumEr);
             if (min > sumEr) {
+                if (min - sumEr <= DELTA_THRESHOLD) {
+                    System.out.println("STOP WITH THRESHOLD");
+                    break;
+                }
                 min = sumEr;
                 System.out.println(" min: " + min);
             }
@@ -236,31 +246,74 @@ public class ANN {
 //                    System.out.println("");
                 }
             }
-            System.out.println("expected: "+ tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
-            System.out.println("expected: "+ row + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]*1000);
+            System.out.println("expected: " + tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
+//            System.out.println("expected: "+ row + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]*1000);
         }
     }
 
     public static double[][] genTest() {
         double arr[][] = new double[1000][2];
         for (int i = 0; i < arr.length; i++) {
-            arr[i][0] = (double)i / 1000;
-            arr[i][1] = (double)i / 1000;
+            arr[i][0] = (double) i / 1000;
+            arr[i][1] = (double) i / 1000;
             //      System.out.println(arr[i][1]);
         }
         return arr;
+    }
+
+    public static double[][] genSinTest(int size) {
+        double arr[][] = new double[size][2];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i][0] = i * 1.0f / size;
+            arr[i][1] = 0.5 * Math.sin(arr[i][0]) + 0.5;
+        }
+
+        return arr;
+    }
+
+    public static Pair<double[][], double[][]> divideTest(double[][] data, double percentage) {
+        int index = (int) (percentage * data.length);
+
+        double[][] first = new double[index][data[0].length];
+        double[][] second = new double[data.length - index][data[0].length];
+
+        for (int i = 0; i < data.length; ++i) {
+            if (i < index) {
+                first[i] = data[i];
+            } else {
+                second[i - index] = data[i];
+            }
+        }
+
+        return new Pair(first, second);
+    }
+
+    public static void shuffle(double[][] data, int times) {
+        for (int i = 0; i < times; ++i) {
+            int first = (int) (Math.random() * data.length);
+            int second = (int) (Math.random() * data.length);
+
+            System.out.println("first: " + first + " second: " + second);
+
+            double[] tmp = data[first];
+            data[first] = data[second];
+            data[second] = tmp;
+        }
     }
 
     public static void main(String[] args) {
         ANN ann = new ANN();
         //    double[][] arr = {{1, 0, 0}, {0, 1, 0}, {1, 1, 1}, {0, 0, 0}};
         // gen test
-        double[][] arr = genTest();
-        ann.readFile(arr);
+        //double[][] arr = genTest();
+        double[][] arr = genSinTest(1000);
+        shuffle(arr, 500);
+        Pair<double[][], double[][]> data = divideTest(arr, 0.25);
+        ann.readFile(data.first);
         ann.run();
 
         //     double[][] arr1 = {{1, 1, 0}, {1, 0, 0}, {0, 1, 0}, {0, 0, 0}};
-        ann.predict(arr);
+        ann.predict(data.second);
 
     }
 }
