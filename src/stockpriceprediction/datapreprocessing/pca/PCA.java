@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package stockpriceprediction.pca;
+package stockpriceprediction.datapreprocessing.pca;
 
 import stockpriceprediction.helper.BasicStatistics;
 import stockpriceprediction.helper.Pair;

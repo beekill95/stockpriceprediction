@@ -15,7 +15,7 @@ import stockpriceprediction.dataloader.CsvDataSetLoader;
 
 import stockpriceprediction.helper.Pair;
 
-import stockpriceprediction.pca.PCA;
+import stockpriceprediction.datapreprocessing.pca.PCA;
 
 /**
  *

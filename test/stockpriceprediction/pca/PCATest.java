@@ -5,6 +5,7 @@
  */
 package stockpriceprediction.pca;
 
+import stockpriceprediction.datapreprocessing.pca.PCA;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

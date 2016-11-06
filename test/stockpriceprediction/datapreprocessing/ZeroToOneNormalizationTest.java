@@ -5,6 +5,7 @@
  */
 package stockpriceprediction.datapreprocessing;
 
+import stockpriceprediction.datapreprocessing.normalization.ZeroToOneNormalization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
