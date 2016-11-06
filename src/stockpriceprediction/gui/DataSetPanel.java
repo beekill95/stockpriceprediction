@@ -24,10 +24,64 @@ import stockpriceprediction.datapreprocessing.pca.PCA;
  */
 public class DataSetPanel extends javax.swing.JPanel {
 
+    private static final int ClosedPriceIndex = 3;
     private DataNormalization dataNormalization = new ZeroToOneNormalization();
     private PCA pca;
     private double[][] normalizedData;
     private double[][] dataSetInReducedPca;
+    
+    // return training data (normalization only) and without any division for trainig and testing
+    public double[][] getTrainingDataNormalizationOnly() {
+        double[][] trainingData = new double[normalizedData[0].length][normalizedData.length];
+        
+        for (int r = 0; r < normalizedData[0].length; ++r)
+            for (int f = 0; f < normalizedData.length; ++f)
+                trainingData[r][f] = normalizedData[f][r];
+        
+        return trainingData;
+    }
+    
+    // return training data without any division for training and testing
+    public double[][] getTrainingData() {
+        double[][] trainingData = new double[dataSetInReducedPca[0].length][dataSetInReducedPca.length + 1];
+        
+        for (int r = 0; r < dataSetInReducedPca[0].length; ++r) {
+            // get data set in reduced pca
+            for (int f = 0; f < dataSetInReducedPca.length; ++f)
+                trainingData[r][f] = dataSetInReducedPca[f][r];
+            
+            // Get closed price
+            trainingData[r][dataSetInReducedPca.length] = normalizedData[ClosedPriceIndex][r];
+        }
+        
+        return trainingData;
+    }
+    
+    // return predicting data (normalization only) and without any division for trainig and testing
+    public double[] preprocessDataNormalizationOnly(double[] data) {
+        return dataNormalization.normalizeNewData(data);
+    }
+    
+    // return data ready for predict in neural network
+    // the format is
+    // {PC1, PC2, ..., NormalizedClosedPrice}
+    public double[] preprocessData(double[] data) {
+        double[] normalizedData = dataNormalization.normalizeNewData(data);
+        double[] pcaData = pca.calculateDataInPCA(normalizedData);
+        
+        double[] returnedData = new double[pcaData.length + 1];
+        for (int f = 0; f < pcaData.length; ++f)
+            returnedData[f] = pcaData[f];
+        returnedData[pcaData.length] = normalizedData[ClosedPriceIndex];
+        
+        return returnedData;
+    }
+    
+    // return the closed priced 
+    public double toOriginalData(double closedPrice) {
+        return dataNormalization.toOriginalData(ClosedPriceIndex, closedPrice);
+    }
+    
     
     /**
      * Creates new form DataSetPanel
@@ -103,7 +157,7 @@ public class DataSetPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 805, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
