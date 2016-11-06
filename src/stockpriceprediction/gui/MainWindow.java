@@ -6,13 +6,25 @@
 package stockpriceprediction.gui;
 
 import java.io.File;
+import java.lang.Thread;
+
+import javax.swing.SwingUtilities;
+import stockpriceprediction.helper.Pair;
+
+import stockpriceprediction.neuralnetwork.ANN;
+import static stockpriceprediction.neuralnetwork.ANN.divideTest;
+import static stockpriceprediction.neuralnetwork.ANN.genSinTest;
+import static stockpriceprediction.neuralnetwork.ANN.shuffle;
 
 /**
  *
  * @author beekill
  */
-public class MainWindow extends javax.swing.JFrame {
-
+public class MainWindow extends javax.swing.JFrame
+        implements ResultPanel.ResultPanelInteractionHandler
+{
+    
+    private ANN ann;
     private javax.swing.JFrame parent;
     private File networkModelFile;
     
@@ -30,6 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         this.parent = parent;
         networkModelPanel.setConfiguration(defaultConfiguration, null);
+        resultPanel.setInteractionHandler(this);
     }
     
     public MainWindow(javax.swing.JFrame parent, File networkModelFile) {
@@ -101,6 +114,8 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosed
 
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -135,6 +150,57 @@ public class MainWindow extends javax.swing.JFrame {
 //            }
 //        });
 //    }
+
+    @Override
+    public void onTrainButtonClicked() {
+        //double[][] trainingData = dataSetPanel.getTrainingData();
+        if (/*trainingData != null*/ true) {
+//            ann = new ANN();
+//            
+//            Runnable r = new Runnable() {
+//                @Override
+//                public void run() {
+//                    ann.readFile(trainingData);
+//                    ann.run();
+//                    
+//                    SwingUtilities.invokeLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            resultPanel.onTrainFinished();
+//                        }
+//                    });
+//                }
+//            };
+            
+            Runnable r1 = new Runnable() {
+                @Override
+                public void run() {
+                    ANN ann = new ANN();
+                    
+                    double[][] arr = genSinTest(1000);
+                    shuffle(arr, 500);
+                    Pair<double[][], double[][]> data = divideTest(arr, 0.25);
+                    ann.readFile(data.first);
+                    ann.run();
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            ann.predict(data.second);
+                        }
+                    });
+                }
+            };
+            
+            Thread t = new Thread(r1);
+            t.start();
+        }
+    }
+
+    @Override
+    public void onPredictButtonClicked(double[] data) {
+        double[] predictData = dataSetPanel.preprocessData(data);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private stockpriceprediction.gui.DataSetPanel dataSetPanel;

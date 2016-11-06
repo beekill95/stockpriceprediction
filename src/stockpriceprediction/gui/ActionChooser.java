@@ -20,6 +20,7 @@ public class ActionChooser extends javax.swing.JFrame {
      */
     public ActionChooser() {
         initComponents();
+        loadButton.setVisible(false);
     }
 
     /**
