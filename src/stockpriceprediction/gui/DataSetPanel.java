@@ -15,6 +15,7 @@ import stockpriceprediction.dataloader.CsvDataSetLoader;
 
 import stockpriceprediction.helper.Pair;
 
+import stockpriceprediction.datapreprocessing.normalization.*;
 import stockpriceprediction.datapreprocessing.pca.PCA;
 
 /**
@@ -23,7 +24,9 @@ import stockpriceprediction.datapreprocessing.pca.PCA;
  */
 public class DataSetPanel extends javax.swing.JPanel {
 
+    private DataNormalization dataNormalization = new ZeroToOneNormalization();
     private PCA pca;
+    private double[][] normalizedData;
     private double[][] dataSetInReducedPca;
     
     /**
@@ -238,7 +241,8 @@ public class DataSetPanel extends javax.swing.JPanel {
     }
     
     private void displayDataSetInDataTable(TableDataSet dataSet) {
-        Object[][] data = convertDataSetToObjectArray(dataSet);
+        normalizedData = dataNormalization.normalizeData(dataSet.to2dArrayFieldEach());
+        Object[][] data = transpose(toObjectArray(normalizedData));
         String[] columnNames = null;
         
         if (dataSet.getColumnNames() == null) 
@@ -279,7 +283,7 @@ public class DataSetPanel extends javax.swing.JPanel {
     }
     
     private void calculateAndDisplayPCAResult(TableDataSet dataSet) {
-        pca = new PCA(dataSet.to2dArrayFieldEach(), 0.9);
+        pca = new PCA(normalizedData, 0.9);
         dataSetInReducedPca = pca.getDataInReducedPrincipalComponents();
         
         displayEigenValuesAndItsContribution(pca.getEigenVectorsValues());

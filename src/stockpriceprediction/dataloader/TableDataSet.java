@@ -5,6 +5,7 @@
  */
 package stockpriceprediction.dataloader;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 
 import stockpriceprediction.helper.Pair;
@@ -32,7 +33,7 @@ public class TableDataSet {
     }
     
     public String[] getColumnNames() {
-        return columnNames;
+        return Arrays.copyOfRange(columnNames, 1, columnNames.length);
     }
     
     public Pair<String, double[]> getRow(int rowIndex) {
