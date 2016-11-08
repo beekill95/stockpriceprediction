@@ -65,10 +65,10 @@ public class MainWindow extends javax.swing.JFrame
         networkModelPanel = new stockpriceprediction.gui.NetworkModelPanel();
         dataSetPanel = new stockpriceprediction.gui.DataSetPanel();
         resultPanel = new stockpriceprediction.gui.ResultPanel();
-        statusLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Stock Price Prediction");
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -79,25 +79,20 @@ public class MainWindow extends javax.swing.JFrame
         jTabbedPane1.addTab("Data Set", dataSetPanel);
         jTabbedPane1.addTab("Result", resultPanel);
 
-        statusLabel.setText("jLabel1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
-                    .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusLabel))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -207,6 +202,5 @@ public class MainWindow extends javax.swing.JFrame
     private javax.swing.JTabbedPane jTabbedPane1;
     private stockpriceprediction.gui.NetworkModelPanel networkModelPanel;
     private stockpriceprediction.gui.ResultPanel resultPanel;
-    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 }

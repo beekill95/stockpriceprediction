@@ -5,6 +5,15 @@
  */
 package stockpriceprediction.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartFactory;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 /**
  *
  * @author beekill
@@ -22,8 +31,51 @@ public class ResultPanel extends javax.swing.JPanel {
         predictedValueLabel.setText(String.valueOf(predictedValue));
     }
     
-    public void onTrainFinished() {
-    
+    public void onTrainFinished(double[] realValues, double[] predictedValues) {
+        if (realValues == null || predictedValues == null) {
+            // create a random-data chart
+            XYSeries series = new XYSeries("Result Graph");
+            series.add(1, 1);
+            series.add(1, 2);
+            series.add(2, 1);
+            series.add(3, 9);
+            series.add(4, 10);
+
+            XYSeriesCollection dataSet = new XYSeriesCollection();
+            dataSet.addSeries(series);
+
+            JFreeChart chart = ChartFactory.createXYLineChart(null, null, null, dataSet);
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setPreferredSize(new Dimension(690, 250));
+
+            jPanel2.getLayout().addLayoutComponent("Test", chartPanel);
+
+            jPanel2.add(chartPanel, BorderLayout.CENTER);
+            jPanel2.validate();
+        } else {
+            XYSeries realSeries = new XYSeries("Real");
+            for (int i = 0; i < realValues.length; ++i)
+                realSeries.add(i + 1, realValues[i]);
+            
+            int predictedStartIdx = realValues.length - predictedValues.length;
+            XYSeries predictedSeries = new XYSeries("Predicted");
+            for (int i = 0; i < predictedValues.length; ++i) {
+                predictedSeries.add(i + predictedStartIdx, predictedValues[i]);
+            }
+            
+            XYSeriesCollection dataSet = new XYSeriesCollection();
+            dataSet.addSeries(realSeries);
+            dataSet.addSeries(predictedSeries);
+            
+            JFreeChart chart = ChartFactory.createXYLineChart(null, null, null, dataSet);
+            ChartPanel chartPanel = new ChartPanel(chart);
+            chartPanel.setPreferredSize(new Dimension(690, 250));
+
+            jPanel2.getLayout().addLayoutComponent("Real", chartPanel);
+
+            jPanel2.add(chartPanel, BorderLayout.CENTER);
+            jPanel2.validate();
+        }
     }
 
     /**
@@ -31,6 +83,8 @@ public class ResultPanel extends javax.swing.JPanel {
      */
     public ResultPanel() {
         initComponents();
+        
+        
     }
     
     public void setInteractionHandler(ResultPanelInteractionHandler handler) {
@@ -178,7 +232,7 @@ public class ResultPanel extends javax.swing.JPanel {
                         .addComponent(jLabel8)
                         .addComponent(adjClosedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(predictButton)
                     .addComponent(jLabel5)
@@ -194,22 +248,7 @@ public class ResultPanel extends javax.swing.JPanel {
                 trainButtonActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(630, Short.MAX_VALUE)
-                .addComponent(trainButton)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(trainButton)
-                .addGap(0, 327, Short.MAX_VALUE))
-        );
+        jPanel2.add(trainButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -225,9 +264,9 @@ public class ResultPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -236,6 +275,12 @@ public class ResultPanel extends javax.swing.JPanel {
         if (handler != null) {
             handler.onTrainButtonClicked();
         }
+        
+        onTrainFinished(new double[] {
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+        }, new double[] {
+            5, 7, 9, 11, 3, 5, 9
+        });
     }//GEN-LAST:event_trainButtonActionPerformed
 
     private void predictButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictButtonActionPerformed
