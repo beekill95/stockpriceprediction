@@ -78,6 +78,29 @@ public class ANN {
     // ann
     Layer[] ann;
 
+    public ANN(int numInput, int numLayer, int numLoop,
+            double alpha, double threshold, double delta_threshold, int[] numperEachLayer) {
+        NUM_INPUT = numInput;
+        NUM_LAYER = numLayer;
+        NUM_LOOP = numLoop;
+        this.numPerEachLayer = numperEachLayer;
+
+        ALPHA = alpha;
+        THRESHOLD = threshold;
+        DELTA_THRESHOLD = delta_threshold;
+
+        ann = new Layer[NUM_LAYER];
+
+        // initialize ann
+        // for first layer
+        ann[0] = new Layer(numPerEachLayer[0], NUM_INPUT);
+        for (int i = 1; i < NUM_LAYER; i++) {
+            // number of input of each perceptron equal to number of perceptron 
+            // in previous layer
+            ann[i] = new Layer(numPerEachLayer[i], numPerEachLayer[i - 1]);
+        }
+    
+    }
     public ANN() {
         // TODO: read from config
         NUM_INPUT = 1;
@@ -226,8 +249,8 @@ public class ANN {
         return fibo;
     }
 
-    public void predict(double[][] arr) {
-        // 
+    public double[] predict(double[][] arr) {
+        double [] result = new double[arr.length];
         for (int row = 0; row < arr.length; row++) {
             Tuple tuple = new Tuple(arr[row]);
             for (int i = 0; i < NUM_LAYER; i++) {
@@ -246,9 +269,11 @@ public class ANN {
 //                    System.out.println("");
                 }
             }
+            // return the output which is not denormalize
+            result[row] = ann[NUM_LAYER - 1].outputArr[0];
             System.out.println("expected: " + tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
-//            System.out.println("expected: "+ row + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]*1000);
         }
+        return result;
     }
 
     public static double[][] genTest() {
