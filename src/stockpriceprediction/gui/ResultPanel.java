@@ -55,7 +55,7 @@ public class ResultPanel extends javax.swing.JPanel {
         } else {
             XYSeries realSeries = new XYSeries("Real");
             for (int i = 0; i < realValues.length; ++i)
-                realSeries.add(i + 1, realValues[i]);
+                realSeries.add(i, realValues[i]);
             
             int predictedStartIdx = realValues.length - predictedValues.length;
             XYSeries predictedSeries = new XYSeries("Predicted");
@@ -70,6 +70,8 @@ public class ResultPanel extends javax.swing.JPanel {
             JFreeChart chart = ChartFactory.createXYLineChart(null, null, null, dataSet);
             ChartPanel chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(new Dimension(690, 250));
+            chartPanel.setMouseWheelEnabled(true);
+            chartPanel.setAutoscrolls(true);
 
             jPanel2.getLayout().addLayoutComponent("Real", chartPanel);
 
@@ -276,11 +278,11 @@ public class ResultPanel extends javax.swing.JPanel {
             handler.onTrainButtonClicked();
         }
         
-        onTrainFinished(new double[] {
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-        }, new double[] {
-            5, 7, 9, 11, 3, 5, 9
-        });
+//        onTrainFinished(new double[] {
+//            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+//        }, new double[] {
+//            5, 7, 9, 11, 3, 5, 9
+//        });
     }//GEN-LAST:event_trainButtonActionPerformed
 
     private void predictButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predictButtonActionPerformed

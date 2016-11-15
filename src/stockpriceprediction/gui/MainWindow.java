@@ -178,10 +178,27 @@ public class MainWindow extends javax.swing.JFrame
                     ann.readFile(data.first);
                     ann.run();
 
+                    // check the result
+                    double[][] predictResult = new double[data.second.length][1];
+                    for (int i = 0; i < data.second.length; ++i) {
+                        double[][] row = new double[1][data.second[i].length];
+                        row[0] = data.second[i];
+                        
+                        predictResult[i] = ann.predict(row);
+                    }
+                    
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            ann.predict(data.second);
+                            double[] realValues = new double[arr.length];
+                            for (int i = 0; i < arr.length; ++i)
+                                realValues[i] = arr[i][1];
+                            
+                            double[] predictedValues = new double[predictResult.length];
+                            for (int i = 0; i < predictedValues.length; ++i)
+                                predictedValues[i] = predictResult[i][0];
+                            
+                            resultPanel.onTrainFinished(realValues, predictedValues);
                         }
                     });
                 }
