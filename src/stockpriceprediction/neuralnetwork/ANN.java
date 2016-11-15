@@ -107,8 +107,8 @@ public class ANN {
         NUM_LAYER = 2;
         ALPHA = 0.8;
         NUM_LOOP = 10000;
-        THRESHOLD = 0.02;
-        DELTA_THRESHOLD = 0.001;
+        THRESHOLD = 0.005;
+        DELTA_THRESHOLD = 0.00001;
         numPerEachLayer = new int[NUM_LAYER];
 
         // hidden layer

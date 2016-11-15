@@ -337,7 +337,7 @@ public class DataSetPanel extends javax.swing.JPanel {
     }
     
     private void calculateAndDisplayPCAResult(TableDataSet dataSet) {
-        pca = new PCA(normalizedData, 0.9);
+        pca = new PCA(normalizedData, 0.98);
         dataSetInReducedPca = pca.getDataInReducedPrincipalComponents();
         
         displayEigenValuesAndItsContribution(pca.getEigenVectorsValues());

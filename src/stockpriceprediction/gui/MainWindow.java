@@ -173,11 +173,11 @@ public class MainWindow extends javax.swing.JFrame
                         public void run() {
                             double[] realValues = new double[trainingData.length];
                             for (int i = 0; i < trainingData.length; ++i)
-                                realValues[i] = trainingData[i][trainingData[0].length - 1];
+                                realValues[i] = dataSetPanel.toOriginalData(trainingData[i][trainingData[0].length - 1]);
                             
                             double[] predictedValues = new double[predictResult.length];
                             for (int i = 0; i < predictedValues.length; ++i)
-                                predictedValues[i] = predictResult[i][0];
+                                predictedValues[i] = dataSetPanel.toOriginalData(predictResult[i][0]);
                             
                             resultPanel.onTrainFinished(realValues, predictedValues);
                         }
