@@ -148,36 +148,17 @@ public class MainWindow extends javax.swing.JFrame
 
     @Override
     public void onTrainButtonClicked() {
-        //double[][] trainingData = dataSetPanel.getTrainingData();
-        if (/*trainingData != null*/ true) {
-//            ann = new ANN();
-//            
-//            Runnable r = new Runnable() {
-//                @Override
-//                public void run() {
-//                    ann.readFile(trainingData);
-//                    ann.run();
-//                    
-//                    SwingUtilities.invokeLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            resultPanel.onTrainFinished();
-//                        }
-//                    });
-//                }
-//            };
+        double[][] trainingData = dataSetPanel.getTrainingData();
+        Pair<double[][], double[][]> data = divideTest(trainingData, 0.8);
+        if (trainingData != null /*true*/) {
+            ann = new ANN();
             
-            Runnable r1 = new Runnable() {
+            Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    ANN ann = new ANN();
-                    
-                    double[][] arr = genSinTest(1000);
-                    shuffle(arr, 500);
-                    Pair<double[][], double[][]> data = divideTest(arr, 0.25);
                     ann.readFile(data.first);
                     ann.run();
-
+                    
                     // check the result
                     double[][] predictResult = new double[data.second.length][1];
                     for (int i = 0; i < data.second.length; ++i) {
@@ -190,9 +171,9 @@ public class MainWindow extends javax.swing.JFrame
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            double[] realValues = new double[arr.length];
-                            for (int i = 0; i < arr.length; ++i)
-                                realValues[i] = arr[i][1];
+                            double[] realValues = new double[trainingData.length];
+                            for (int i = 0; i < trainingData.length; ++i)
+                                realValues[i] = trainingData[i][trainingData[0].length - 1];
                             
                             double[] predictedValues = new double[predictResult.length];
                             for (int i = 0; i < predictedValues.length; ++i)
@@ -204,7 +185,44 @@ public class MainWindow extends javax.swing.JFrame
                 }
             };
             
-            Thread t = new Thread(r1);
+//            Runnable r1 = new Runnable() {
+//                @Override
+//                public void run() {
+//                    ANN ann = new ANN();
+//                    
+//                    double[][] arr = genSinTest(1000);
+//                    shuffle(arr, 500);
+//                    Pair<double[][], double[][]> data = divideTest(arr, 0.25);
+//                    ann.readFile(data.first);
+//                    ann.run();
+//
+//                    // check the result
+//                    double[][] predictResult = new double[data.second.length][1];
+//                    for (int i = 0; i < data.second.length; ++i) {
+//                        double[][] row = new double[1][data.second[i].length];
+//                        row[0] = data.second[i];
+//                        
+//                        predictResult[i] = ann.predict(row);
+//                    }
+//                    
+//                    SwingUtilities.invokeLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            double[] realValues = new double[arr.length];
+//                            for (int i = 0; i < arr.length; ++i)
+//                                realValues[i] = arr[i][1];
+//                            
+//                            double[] predictedValues = new double[predictResult.length];
+//                            for (int i = 0; i < predictedValues.length; ++i)
+//                                predictedValues[i] = predictResult[i][0];
+//                            
+//                            resultPanel.onTrainFinished(realValues, predictedValues);
+//                        }
+//                    });
+//                }
+//            };
+            
+            Thread t = new Thread(r);
             t.start();
         }
     }

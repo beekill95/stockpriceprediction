@@ -103,12 +103,12 @@ public class ANN {
     }
     public ANN() {
         // TODO: read from config
-        NUM_INPUT = 1;
+        NUM_INPUT = 2; // <------------------------------------------------------I changed this
         NUM_LAYER = 2;
         ALPHA = 0.8;
-        NUM_LOOP = 1000000;
-        THRESHOLD = 0.003;
-        DELTA_THRESHOLD = 0.0000001;
+        NUM_LOOP = 10000;
+        THRESHOLD = 0.02;
+        DELTA_THRESHOLD = 0.001;
         numPerEachLayer = new int[NUM_LAYER];
 
         // hidden layer
