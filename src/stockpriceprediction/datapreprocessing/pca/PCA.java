@@ -37,21 +37,35 @@ import java.util.ArrayList;
  */
 
 public class PCA {    
-    private final double[][] normalizedDataSet;
+    private final double[][] centralizedData;
     
     private final Pair<Vector, Double>[] originalEigenVectorsValues;
     private final Pair<Vector, Double>[] reducedEigenVectorsValues;
     
     public PCA(double[][] normalizedDataSet, double cummulativePercentageThreshold) {
-        this.normalizedDataSet = normalizedDataSet;
-        double[][] covarianceMatrix = BasicStatistics.covarianceMatrix(normalizedDataSet);
-        double[][] correlationMatrix = BasicStatistics.correlationMatrix(normalizedDataSet);
+        this.centralizedData = centralizeData(normalizedDataSet);
+        //double[][] covarianceMatrix = BasicStatistics.covarianceMatrix(normalizedDataSet);
+        double[][] correlationMatrix = BasicStatistics.correlationMatrix(centralizedData);
         
         //originalEigenVectorsValues = calculateEigenvectorsAndEigenvalues(covarianceMatrix);
         originalEigenVectorsValues = calculateEigenvectorsAndEigenvalues(correlationMatrix);
         PCAHelper.bubbleSort(originalEigenVectorsValues);
         
         reducedEigenVectorsValues = reducePrincipalComponents(originalEigenVectorsValues, cummulativePercentageThreshold);
+    }
+    
+    private double[][] centralizeData(double[][] normalizedDataSet) {
+        double[][] centralizedData = new double[normalizedDataSet.length][normalizedDataSet[0].length];
+        
+        for (int i = 0; i < centralizedData.length; ++i) {
+            double thisFieldMean = BasicStatistics.mean(normalizedDataSet[i]);
+            
+            for (int j = 0; j < normalizedDataSet[i].length; ++j) {
+                centralizedData[i][j] = normalizedDataSet[i][j] - thisFieldMean;
+            }
+        }
+        
+        return centralizedData;
     }
     
     public Pair<Vector, Double>[] getEigenVectorsValues() {
@@ -67,7 +81,7 @@ public class PCA {
         Matrix eigenVectorsMatrix = PCAHelper.convertEigenPairsToLa4jMatrix(reducedEigenVectorsValues);
         
         // convert data to matrix
-        Matrix dataMatrix = DenseMatrix.from2DArray(normalizedDataSet);
+        Matrix dataMatrix = DenseMatrix.from2DArray(centralizedData);
         
         // convert to principal componenents
         Matrix dataSetInPC = eigenVectorsMatrix.multiply(dataMatrix);

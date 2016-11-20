@@ -25,7 +25,7 @@ import stockpriceprediction.datapreprocessing.pca.PCA;
 public class DataSetPanel extends javax.swing.JPanel {
 
     private static final int ClosedPriceIndex = 3;
-    private DataNormalization dataNormalization = new ZeroToOneNormalization();
+    private final DataNormalization dataNormalization = new ZeroToOneNormalization();
     private PCA pca;
     private double[][] normalizedData;
     private double[][] dataSetInReducedPca;
@@ -261,7 +261,7 @@ public class DataSetPanel extends javax.swing.JPanel {
     private TableDataSet dataSet;
     
     private void fileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileButtonActionPerformed
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser("/home/beekill/learning/university/data_mining/bai_tap_lon/data");
         int returnValue = fileChooser.showOpenDialog(null);
         
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -336,8 +336,24 @@ public class DataSetPanel extends javax.swing.JPanel {
         return data;
     }
     
+    private static double[][] removeClosePrice(double[][] data) {
+        double[][] dataWithoutClosePrice = new double[data.length - 1][data[0].length];
+        
+        for (int i = 0; i < data.length; ++i) {
+            if (i == ClosedPriceIndex)
+                continue;
+            
+            int iIdx = (i < ClosedPriceIndex) ? i : i - 1;
+            for (int j = 0; j < data[0].length; ++j)
+                dataWithoutClosePrice[iIdx][j] = data[i][j];
+        }
+        
+        return dataWithoutClosePrice;
+    }
+    
     private void calculateAndDisplayPCAResult(TableDataSet dataSet) {
-        pca = new PCA(normalizedData, 0.98);
+        double[][] dataWithoutClosePrice = removeClosePrice(normalizedData);
+        pca = new PCA(dataWithoutClosePrice, 0.98);
         dataSetInReducedPca = pca.getDataInReducedPrincipalComponents();
         
         displayEigenValuesAndItsContribution(pca.getEigenVectorsValues());

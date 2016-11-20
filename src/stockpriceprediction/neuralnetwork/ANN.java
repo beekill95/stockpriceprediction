@@ -105,8 +105,8 @@ public class ANN {
         // TODO: read from config
         NUM_INPUT = 2; // <------------------------------------------------------I changed this
         NUM_LAYER = 2;
-        ALPHA = 0.8;
-        NUM_LOOP = 10000;
+        ALPHA = 0.1;
+        NUM_LOOP = 100000;
         THRESHOLD = 0.005;
         DELTA_THRESHOLD = 0.00001;
         numPerEachLayer = new int[NUM_LAYER];
