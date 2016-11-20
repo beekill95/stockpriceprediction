@@ -117,7 +117,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="0.0001"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -130,7 +130,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="100"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -149,7 +149,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" value="0.3"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -158,7 +158,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" value="0.5"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -224,7 +224,7 @@
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="layerTwoText" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="27" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="layerThreeText" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -272,7 +272,7 @@
               <Dimension value="[30, 88]"/>
             </Property>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -285,7 +285,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="50"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -298,7 +298,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="20"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -311,7 +311,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="5"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>
@@ -369,7 +369,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="0.8"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 19]"/>
+              <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
         </Component>

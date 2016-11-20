@@ -85,9 +85,9 @@ public class NetworkModelPanel extends javax.swing.JPanel {
             return new NeuralNetworkConfiguration(learningRate, maxIterations, trainingError, learningMomentum, numOfHiddenLayers, hiddenLayerNodes, trainingPercentage);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            return null;
         }
+            
+        return null;
     }
     
     private int[] getHiddenLayersNode(int numOfHiddenLayers) {
@@ -143,12 +143,12 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         jLabel7.setText("Learning Rate: ");
 
         learningRateText.setText("0.0001");
-        learningRateText.setPreferredSize(new java.awt.Dimension(100, 19));
+        learningRateText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         jLabel8.setText("Max Iterations:");
 
         maxIternationText.setText("100");
-        maxIternationText.setPreferredSize(new java.awt.Dimension(100, 19));
+        maxIternationText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         jLabel9.setText("Learning Momentum:");
 
@@ -156,11 +156,11 @@ public class NetworkModelPanel extends javax.swing.JPanel {
 
         learningMomentumText.setEditable(false);
         learningMomentumText.setText("0.3");
-        learningMomentumText.setPreferredSize(new java.awt.Dimension(100, 19));
+        learningMomentumText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         trainingErrorText.setEditable(false);
         trainingErrorText.setText("0.5");
-        trainingErrorText.setPreferredSize(new java.awt.Dimension(100, 19));
+        trainingErrorText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -218,22 +218,22 @@ public class NetworkModelPanel extends javax.swing.JPanel {
 
         layerOneText.setText("10");
         layerOneText.setMinimumSize(new java.awt.Dimension(30, 88));
-        layerOneText.setPreferredSize(new java.awt.Dimension(100, 19));
+        layerOneText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         jLabel3.setText("Hidden Layer #2");
 
         layerTwoText.setText("50");
-        layerTwoText.setPreferredSize(new java.awt.Dimension(100, 19));
+        layerTwoText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         jLabel4.setText("Hidden Layer #3");
 
         layerThreeText.setText("20");
-        layerThreeText.setPreferredSize(new java.awt.Dimension(100, 19));
+        layerThreeText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         jLabel5.setText("Hidden Layer #4");
 
         layerFourText.setText("5");
-        layerFourText.setPreferredSize(new java.awt.Dimension(100, 19));
+        layerFourText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -277,7 +277,7 @@ public class NetworkModelPanel extends javax.swing.JPanel {
                     .addComponent(layerOneText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(layerTwoText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(layerThreeText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -298,7 +298,7 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         jLabel6.setText("Training Percentage");
 
         traningPercentageText.setText("0.8");
-        traningPercentageText.setPreferredSize(new java.awt.Dimension(100, 19));
+        traningPercentageText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
