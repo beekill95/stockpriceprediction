@@ -48,6 +48,7 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         maxIternationText.setText(String.valueOf(configuration.getMaxIterations()));
         trainingErrorText.setText(String.valueOf(configuration.getTrainingError()));
         learningMomentumText.setText(String.valueOf(configuration.getLearningMomentum()));
+        deltaThresholdText.setText(String.valueOf(configuration.getDeltaThreshold()));
     }
     
     private void displayHiddenLayers(NeuralNetworkConfiguration configuration) {
@@ -76,13 +77,14 @@ public class NetworkModelPanel extends javax.swing.JPanel {
             int maxIterations = Integer.parseInt(maxIternationText.getText());
             double trainingError = Double.parseDouble(trainingErrorText.getText());
             double learningMomentum = Double.parseDouble(learningMomentumText.getText());
+            double deltaThreshold = Double.parseDouble(deltaThresholdText.getText());
             
             int numOfHiddenLayers = numHiddenLayersComboBox.getSelectedIndex() + 1;
             int[] hiddenLayerNodes = getHiddenLayersNode(numOfHiddenLayers);
             
             double trainingPercentage = Double.parseDouble(traningPercentageText.getText());
         
-            return new NeuralNetworkConfiguration(learningRate, maxIterations, trainingError, learningMomentum, numOfHiddenLayers, hiddenLayerNodes, trainingPercentage);
+            return new NeuralNetworkConfiguration(learningRate, maxIterations, trainingError, deltaThreshold, learningMomentum, numOfHiddenLayers, hiddenLayerNodes, trainingPercentage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,6 +124,8 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         learningMomentumText = new javax.swing.JTextField();
         trainingErrorText = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        deltaThresholdText = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         numHiddenLayersComboBox = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -151,16 +155,22 @@ public class NetworkModelPanel extends javax.swing.JPanel {
         maxIternationText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         jLabel9.setText("Learning Momentum:");
+        jLabel9.setEnabled(false);
 
         jLabel10.setText("Training Error:");
 
         learningMomentumText.setEditable(false);
         learningMomentumText.setText("0.3");
+        learningMomentumText.setEnabled(false);
         learningMomentumText.setPreferredSize(new java.awt.Dimension(100, 25));
 
-        trainingErrorText.setEditable(false);
         trainingErrorText.setText("0.5");
         trainingErrorText.setPreferredSize(new java.awt.Dimension(100, 25));
+
+        jLabel11.setText("Delta Threshold:");
+
+        deltaThresholdText.setText("0.5");
+        deltaThresholdText.setPreferredSize(new java.awt.Dimension(100, 25));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -170,20 +180,26 @@ public class NetworkModelPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel10))
-                .addGap(47, 47, 47)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
+                .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(trainingErrorText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(learningRateText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(110, 110, 110)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maxIternationText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(learningMomentumText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(43, 43, 43))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(trainingErrorText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(learningRateText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(110, 110, 110)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxIternationText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(learningMomentumText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(deltaThresholdText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,7 +216,11 @@ public class NetworkModelPanel extends javax.swing.JPanel {
                     .addComponent(jLabel10)
                     .addComponent(learningMomentumText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(trainingErrorText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(deltaThresholdText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Hidden Layers"));
@@ -369,8 +389,10 @@ public class NetworkModelPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton defaultButton;
+    private javax.swing.JTextField deltaThresholdText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

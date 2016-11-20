@@ -29,7 +29,7 @@ public class MainWindow extends javax.swing.JFrame
     private File networkModelFile;
     
     private final NeuralNetworkConfiguration defaultConfiguration = new NeuralNetworkConfiguration(
-                0.1, 10000, 0.4, 0.9,
+                0.1, 10000, 0.4, 0.0001, 0.9,
                 2, new int[]{50, 40, 100, 50},
                 0.0001
     );
@@ -149,16 +149,16 @@ public class MainWindow extends javax.swing.JFrame
     @Override
     public void onTrainButtonClicked() {
         double[][] trainingData = dataSetPanel.getTrainingData();
-        NeuralNetworkConfiguration currentConfig = networkModelPanel.getCurrentConfiguration();
-        Pair<double[][], double[][]> data = divideTest(trainingData, 0.8);
+        final NeuralNetworkConfiguration currentConfig = networkModelPanel.getCurrentConfiguration();
+        Pair<double[][], double[][]> data = divideTest(trainingData, currentConfig.getTrainingPercentage());
         if (trainingData != null /*true*/) {
             ann = new ANN(
-                    /* num input */ 2,
+                    /* num input */ trainingData.length - 1,
                     /* num layer */ currentConfig.getNumOfHiddenLayers(),
                     /* num loop */ currentConfig.getMaxIterations(),
                     /* learning rate */ currentConfig.getLearningRate(),
                     /* threshold */ currentConfig.getTrainingError(),
-                    /* delta threshold */ 0.0001,
+                    /* delta threshold */ currentConfig.getDeltaThreshold(),
                     /* number of node per each layer */ currentConfig.getHiddenLayerNodes()
             );
             

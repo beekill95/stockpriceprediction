@@ -17,16 +17,18 @@ public class NeuralNetworkConfiguration {
     private int maxIterations;
     private double trainingError;
     private double learningMomentum;
+    private double deltaThreshold;
     
     private int numOfHiddenLayers;
     private int[] hiddenLayerNodes;
 
     private double trainingPercentage;
 
-    public NeuralNetworkConfiguration(double learningRate, int maxIterations, double trainingError, double learningMomentum, int numOfHiddenLayers, int[] hiddenLayerNodes, double trainingPercentage) {
+    public NeuralNetworkConfiguration(double learningRate, int maxIterations, double trainingError, double deltaThreshold, double learningMomentum, int numOfHiddenLayers, int[] hiddenLayerNodes, double trainingPercentage) {
         this.learningRate = learningRate;
         this.maxIterations = maxIterations;
         this.trainingError = trainingError;
+        this.deltaThreshold = deltaThreshold;
         this.learningMomentum = learningMomentum;
         this.numOfHiddenLayers = numOfHiddenLayers;
         this.hiddenLayerNodes = new int[4];
@@ -103,4 +105,14 @@ public class NeuralNetworkConfiguration {
     public void setTrainingPercentage(double trainingPercentage) {
         this.trainingPercentage = trainingPercentage;
     }
+
+    public double getDeltaThreshold() {
+        return deltaThreshold;
+    }
+
+    public void setDeltaThreshold(double deltaThreshold) {
+        this.deltaThreshold = deltaThreshold;
+    }
+    
+    
 }
