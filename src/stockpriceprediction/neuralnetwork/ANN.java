@@ -29,6 +29,23 @@ public class ANN {
                 inputArr[i] = input[i];
             }
         }
+
+        public Tuple(double[][] table, int row, int num_tuple_block, int num_field) {
+            numInput = num_tuple_block * num_field - 1;
+            inputArr = new double[numInput];
+
+            int x = 0;
+            for (int i = 0; i < num_tuple_block; i++) {
+                for (int j = 0; j < num_field; j++) {
+                    if (i == num_tuple_block - 1 && j == num_field - 1) {
+                        expectedOutput = table[row + i][j];
+                    } else {
+                        inputArr[x] = table[row + i][j];
+                        x++;
+                    }
+                }
+            }
+        }
     };
 
     private class Layer {
@@ -66,9 +83,11 @@ public class ANN {
      * @param args the command line arguments
      */
     // these attributes are read from configural file
-    final int NUM_INPUT;
+    int NUM_INPUT;
     final int NUM_LAYER;
     final int NUM_LOOP;
+    final int NUM_FIELD;
+    final int NUM_TUPLE_BLOCK;
     final double ALPHA;
     final double THRESHOLD;
     final double DELTA_THRESHOLD;
@@ -78,9 +97,11 @@ public class ANN {
     // ann
     Layer[] ann;
 
-    public ANN(int numInput, int numLayer, int numLoop,
+    public ANN(int numInput, int numLayer, int numLoop, int num_field, int num_tuple_block,
             double alpha, double threshold, double delta_threshold, int[] numperEachLayer) {
-        NUM_INPUT = numInput;
+        NUM_FIELD = num_field;
+        NUM_TUPLE_BLOCK = num_tuple_block;
+        NUM_INPUT = NUM_FIELD * NUM_TUPLE_BLOCK - 1;
         NUM_LAYER = numLayer;
         NUM_LOOP = numLoop;
         this.numPerEachLayer = numperEachLayer;
@@ -99,11 +120,15 @@ public class ANN {
             // in previous layer
             ann[i] = new Layer(numPerEachLayer[i], numPerEachLayer[i - 1]);
         }
-    
+
     }
+
     public ANN() {
         // TODO: read from config
-        NUM_INPUT = 2; // <------------------------------------------------------I changed this
+        NUM_TUPLE_BLOCK = 3;    // number of tuple each block
+        NUM_FIELD = 3;
+        NUM_INPUT = NUM_FIELD * NUM_TUPLE_BLOCK;
+
         NUM_LAYER = 2;
         ALPHA = 0.1;
         NUM_LOOP = 100000;
@@ -133,10 +158,11 @@ public class ANN {
     }
 
     public void readFile(double[][] arr) {
+        int tableLenght = arr.length - NUM_TUPLE_BLOCK + 1;
         // each row is a tuple
-        table = new Tuple[arr.length];
-        for (int row = 0; row < arr.length; row++) {
-            table[row] = new Tuple(arr[row]);
+        table = new Tuple[tableLenght];
+        for (int row = 0; row < tableLenght; row++) {
+            table[row] = new Tuple(arr, row, NUM_TUPLE_BLOCK, NUM_FIELD);
         }
     }
     public double min = Double.MAX_VALUE;
@@ -151,7 +177,7 @@ public class ANN {
                     // set up input array for layer
                     // first layer will get imput from table
                     // other layer will get from output of previous layer
-                    if (i == 0) {
+                    if (i == 0) {                      
                         ann[i].copy(table[row]);
                     } else {
                         ann[i].copy(ann[i - 1].outputArr);
@@ -225,7 +251,7 @@ public class ANN {
             //        System.out.println("sum err: " + sumEr);
             if (min > sumEr) {
                 if (min - sumEr <= DELTA_THRESHOLD) {
-                    System.out.println("STOP WITH THRESHOLD");
+                    System.out.println("STOP WITH DELTA THRESHOLD");
                     break;
                 }
                 min = sumEr;
@@ -250,7 +276,7 @@ public class ANN {
     }
 
     public double[] predict(double[][] arr) {
-        double [] result = new double[arr.length];
+        double[] result = new double[arr.length];
         for (int row = 0; row < arr.length; row++) {
             Tuple tuple = new Tuple(arr[row]);
             for (int i = 0; i < NUM_LAYER; i++) {

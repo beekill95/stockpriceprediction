@@ -156,6 +156,8 @@ public class MainWindow extends javax.swing.JFrame
                     /* num input */ trainingData.length - 1,
                     /* num layer */ currentConfig.getNumOfHiddenLayers(),
                     /* num loop */ currentConfig.getMaxIterations(),
+                    /* num field */ 3,
+                    /* num block */ 3,
                     /* learning rate */ currentConfig.getLearningRate(),
                     /* threshold */ currentConfig.getTrainingError(),
                     /* delta threshold */ currentConfig.getDeltaThreshold(),

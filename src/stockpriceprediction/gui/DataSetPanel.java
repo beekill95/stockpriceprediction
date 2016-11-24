@@ -261,7 +261,7 @@ public class DataSetPanel extends javax.swing.JPanel {
     private TableDataSet dataSet;
     
     private void fileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileButtonActionPerformed
-        JFileChooser fileChooser = new JFileChooser("/home/beekill/learning/university/data_mining/bai_tap_lon/data");
+        JFileChooser fileChooser = new JFileChooser("../");
         int returnValue = fileChooser.showOpenDialog(null);
         
         if (returnValue == JFileChooser.APPROVE_OPTION) {
