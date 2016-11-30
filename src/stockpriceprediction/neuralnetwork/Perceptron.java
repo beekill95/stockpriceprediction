@@ -11,19 +11,26 @@ package stockpriceprediction.neuralnetwork;
  */
 public class Perceptron {
 
-     int numInput;
+    int numInput;
     double[] w;
-    // array of input
+    double[] wn1;   // weight of (n-1)th
+
     double bias;
+    double biasn1;  // bias of (n-1)th
     double error;
-    
+
     public Perceptron(int numInput) {
-        this.numInput = numInput;   
+        this.numInput = numInput;
         w = new double[this.numInput];
+        wn1 = new double[this.numInput];
         error = 0;
-        bias = 0;//Math.random();
+        bias = Math.random();
+        biasn1 = 0;
         for (int i = 0; i < this.numInput; i++) {
-            w[i] =0;// Math.random();
+            w[i] = Math.random();
+        }
+        for (int i = 0; i < this.numInput; i++) {
+            wn1[i] = 0;
         }
     }
 

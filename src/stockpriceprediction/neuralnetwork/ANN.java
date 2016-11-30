@@ -92,18 +92,20 @@ public class ANN {
     final double THRESHOLD;
     final double DELTA_THRESHOLD;
     final int[] numPerEachLayer;
+    final double MOMENTUN;
     // table for storing training data
     Tuple[] table;
     // ann
     Layer[] ann;
 
-    public ANN(int numInput, int numLayer, int numLoop, int num_field, int num_tuple_block,
+    public ANN(int numInput, int numLayer, int numLoop, int num_field, int num_tuple_block, int momentun,
             double alpha, double threshold, double delta_threshold, int[] numperEachLayer) {
         NUM_FIELD = num_field;
         NUM_TUPLE_BLOCK = num_tuple_block;
         NUM_INPUT = NUM_FIELD * NUM_TUPLE_BLOCK - 1;
         NUM_LAYER = numLayer;
         NUM_LOOP = numLoop;
+        MOMENTUN = momentun;
         this.numPerEachLayer = numperEachLayer;
 
         ALPHA = alpha;
@@ -125,16 +127,17 @@ public class ANN {
 
     public ANN() {
         // TODO: read from config
-        NUM_TUPLE_BLOCK = 3;    // number of tuple each block
+        NUM_TUPLE_BLOCK = 1;    // number of tuple each block
         NUM_FIELD = 3;
-        NUM_INPUT = NUM_FIELD * NUM_TUPLE_BLOCK;
+        NUM_INPUT = NUM_FIELD * NUM_TUPLE_BLOCK - 1;
 
         NUM_LAYER = 2;
-        ALPHA = 0.1;
+        ALPHA = 0.01;
         NUM_LOOP = 100000;
         THRESHOLD = 0.005;
-        DELTA_THRESHOLD = 0.00001;
+        DELTA_THRESHOLD = 0.00000001;
         numPerEachLayer = new int[NUM_LAYER];
+        MOMENTUN = 0.9;
 
         // hidden layer
         numPerEachLayer[0] = 4;
@@ -168,6 +171,7 @@ public class ANN {
     public double min = Double.MAX_VALUE;
 
     public void run() {
+        //double lastw;
         for (int loop = 0; loop < NUM_LOOP; loop++) {
             // for each tuple
             for (int row = 0; row < table.length; row++) {
@@ -219,12 +223,14 @@ public class ANN {
                     for (int j = 0; j < ann[i].numPerceptrons; j++) {
                         for (int k = 0; k < ann[i].perceptronLst[j].w.length; k++) {
                             double deltaWeight = ALPHA * ann[i].perceptronLst[j].error * ann[i].inputArr[k];
-                            ann[i].perceptronLst[j].w[k] += deltaWeight;
+                            double preDelta = ann[i].perceptronLst[j].wn1[k];
+                            ann[i].perceptronLst[j].w[k] += deltaWeight + MOMENTUN * preDelta;
                         }
 //                        ann[i].perceptronLst[j].error += deltaWeight;
 
                         double deltaBias = ALPHA * ann[i].perceptronLst[j].error;
-                        ann[i].perceptronLst[j].bias += deltaBias;
+                        double preBias = ann[i].perceptronLst[j].biasn1;
+                        ann[i].perceptronLst[j].bias += deltaBias + MOMENTUN * preBias;
                     }
                 }
             }
@@ -252,7 +258,7 @@ public class ANN {
             if (min > sumEr) {
                 if (min - sumEr <= DELTA_THRESHOLD) {
                     System.out.println("STOP WITH DELTA THRESHOLD");
-                    break;
+                    //break;
                 }
                 min = sumEr;
                 System.out.println(" min: " + min);
@@ -277,8 +283,8 @@ public class ANN {
 
     public double[] predict(double[][] arr) {
         double[] result = new double[arr.length];
-        for (int row = 0; row < arr.length; row++) {
-            Tuple tuple = new Tuple(arr[row]);
+        for (int row = 0 + NUM_TUPLE_BLOCK - 1; row < arr.length; row++) {
+            Tuple tuple = new Tuple(arr, row, NUM_TUPLE_BLOCK, NUM_FIELD);
             for (int i = 0; i < NUM_LAYER; i++) {
                 if (i == 0) {
                     ann[i].copy(tuple);
@@ -286,18 +292,12 @@ public class ANN {
                     ann[i].copy(ann[i - 1].outputArr);
                 }
                 for (int j = 0; j < ann[i].numPerceptrons; j++) {
-//                    System.out.println("weight");
-//                    for (int n = 0; n < ann[i].perceptronLst[j].w.length; n++) {
-//                        System.out.print(" " + ann[i].perceptronLst[j].w[n]);
-//                    }
                     ann[i].outputArr[j] = ann[i].perceptronLst[j].getOutput(ann[i].inputArr);
-//                    System.out.print(" " + ann[i].outputArr[j]);
-//                    System.out.println("");
                 }
             }
             // return the output which is not denormalize
             result[row] = ann[NUM_LAYER - 1].outputArr[0];
-            System.out.println("expected: " + tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
+//            System.out.println("expected: " + tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
         }
         return result;
     }

@@ -152,17 +152,19 @@ public class MainWindow extends javax.swing.JFrame
         final NeuralNetworkConfiguration currentConfig = networkModelPanel.getCurrentConfiguration();
         Pair<double[][], double[][]> data = divideTest(trainingData, currentConfig.getTrainingPercentage());
         if (trainingData != null /*true*/) {
-            ann = new ANN(
-                    /* num input */ trainingData.length - 1,
-                    /* num layer */ currentConfig.getNumOfHiddenLayers(),
-                    /* num loop */ currentConfig.getMaxIterations(),
-                    /* num field */ 3,
-                    /* num block */ 3,
-                    /* learning rate */ currentConfig.getLearningRate(),
-                    /* threshold */ currentConfig.getTrainingError(),
-                    /* delta threshold */ currentConfig.getDeltaThreshold(),
-                    /* number of node per each layer */ currentConfig.getHiddenLayerNodes()
-            );
+//            ann = new ANN(
+//                    /* num input */ trainingData.length - 1,
+//                    /* num layer */ currentConfig.getNumOfHiddenLayers(),
+//                    /* num loop */ currentConfig.getMaxIterations(),
+//                    /* num field */ 3,
+//                    /* num block */ 1,
+//                    /* momentun */ 0.9,
+//                    /* learning rate */ currentConfig.getLearningRate(),
+//                    /* threshold */ currentConfig.getTrainingError(),
+//                    /* delta threshold */ currentConfig.getDeltaThreshold(),
+//                    /* number of node per each layer */ currentConfig.getHiddenLayerNodes()
+//            );
+            ann =  new ANN();
             
             Runnable r = new Runnable() {
                 @Override
@@ -171,10 +173,11 @@ public class MainWindow extends javax.swing.JFrame
                     ann.run();
                     
                     // check the result
-                    double[][] predictResult = new double[data.second.length][1];
-                    for (int i = 0; i < data.second.length; ++i) {
-                        double[][] row = new double[1][data.second[i].length];
-                        row[0] = data.second[i];
+                    //double[][] predictResult = new double[data.second.length][1];
+                    double[][] predictResult = new double[trainingData.length][1];
+                    for (int i = 0; i < /*data.second.length*/ trainingData.length; ++i) {
+                        double[][] row = new double[1][trainingData[i].length];
+                        row[0] = trainingData[i];
                         
                         predictResult[i] = ann.predict(row);
                     }
