@@ -98,7 +98,7 @@ public class ANN {
     // ann
     Layer[] ann;
 
-    public ANN(int numInput, int numLayer, int numLoop, int num_field, int num_tuple_block, int momentun,
+    public ANN(int numInput, int numLayer, int numLoop, int num_field, int num_tuple_block, double momentun,
             double alpha, double threshold, double delta_threshold, int[] numperEachLayer) {
         NUM_FIELD = num_field;
         NUM_TUPLE_BLOCK = num_tuple_block;
@@ -258,7 +258,7 @@ public class ANN {
             if (min > sumEr) {
                 if (min - sumEr <= DELTA_THRESHOLD) {
                     System.out.println("STOP WITH DELTA THRESHOLD");
-                    //break;
+//                    break;
                 }
                 min = sumEr;
                 System.out.println(" min: " + min);
@@ -282,9 +282,9 @@ public class ANN {
     }
 
     public double[] predict(double[][] arr) {
-        double[] result = new double[arr.length];
-        for (int row = 0 + NUM_TUPLE_BLOCK - 1; row < arr.length; row++) {
-            Tuple tuple = new Tuple(arr, row, NUM_TUPLE_BLOCK, NUM_FIELD);
+        double[] result = new double[/*arr.length*/1];
+        //for (int row = /*0 + NUM_TUPLE_BLOCK - 1*/ 0; row < arr.length; row++) {
+            Tuple tuple = new Tuple(arr, /*row*/ 0, NUM_TUPLE_BLOCK, NUM_FIELD);
             for (int i = 0; i < NUM_LAYER; i++) {
                 if (i == 0) {
                     ann[i].copy(tuple);
@@ -296,9 +296,9 @@ public class ANN {
                 }
             }
             // return the output which is not denormalize
-            result[row] = ann[NUM_LAYER - 1].outputArr[0];
+            result[0/*row*/] = ann[NUM_LAYER - 1].outputArr[0];
 //            System.out.println("expected: " + tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
-        }
+        //}
         return result;
     }
 

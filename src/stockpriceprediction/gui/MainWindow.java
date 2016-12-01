@@ -29,8 +29,8 @@ public class MainWindow extends javax.swing.JFrame
     private File networkModelFile;
     
     private final NeuralNetworkConfiguration defaultConfiguration = new NeuralNetworkConfiguration(
-                0.1, 10000, 0.4, 0.0001, 0.9,
-                2, new int[]{50, 40, 100, 50},
+                0.01, 100000, 0.4, 0.00000001, 0.9,
+                2, new int[]{4, 1, 1, 1},
                 0.0001
     );
     
@@ -151,20 +151,21 @@ public class MainWindow extends javax.swing.JFrame
         double[][] trainingData = dataSetPanel.getTrainingData();
         final NeuralNetworkConfiguration currentConfig = networkModelPanel.getCurrentConfiguration();
         Pair<double[][], double[][]> data = divideTest(trainingData, currentConfig.getTrainingPercentage());
+        final int numOfBlock = 1;
         if (trainingData != null /*true*/) {
-//            ann = new ANN(
-//                    /* num input */ trainingData.length - 1,
-//                    /* num layer */ currentConfig.getNumOfHiddenLayers(),
-//                    /* num loop */ currentConfig.getMaxIterations(),
-//                    /* num field */ 3,
-//                    /* num block */ 1,
-//                    /* momentun */ 0.9,
-//                    /* learning rate */ currentConfig.getLearningRate(),
-//                    /* threshold */ currentConfig.getTrainingError(),
-//                    /* delta threshold */ currentConfig.getDeltaThreshold(),
-//                    /* number of node per each layer */ currentConfig.getHiddenLayerNodes()
-//            );
-            ann =  new ANN();
+            ann = new ANN(
+                    /* num input */ trainingData.length - 1,
+                    /* num layer */ currentConfig.getNumOfHiddenLayers(),
+                    /* num loop */ currentConfig.getMaxIterations(),
+                    /* num field */ 3,
+                    /* num block */ numOfBlock,
+                    /* momentun */ 0.0,
+                    /* learning rate */ currentConfig.getLearningRate(),
+                    /* threshold */ currentConfig.getTrainingError(),
+                    /* delta threshold */ currentConfig.getDeltaThreshold(),
+                    /* number of node per each layer */ currentConfig.getHiddenLayerNodes()
+            );
+//            ann =  new ANN();
             
             Runnable r = new Runnable() {
                 @Override
@@ -175,9 +176,10 @@ public class MainWindow extends javax.swing.JFrame
                     // check the result
                     //double[][] predictResult = new double[data.second.length][1];
                     double[][] predictResult = new double[trainingData.length][1];
-                    for (int i = 0; i < /*data.second.length*/ trainingData.length; ++i) {
-                        double[][] row = new double[1][trainingData[i].length];
-                        row[0] = trainingData[i];
+                    for (int i = numOfBlock - 1; i < /*data.second.length*/ trainingData.length; ++i) {
+                        double[][] row = new double[numOfBlock][trainingData[i].length];
+                        for (int j = 0; j < numOfBlock; ++j)
+                            row[j] = trainingData[i - j];
                         
                         predictResult[i] = ann.predict(row);
                     }
