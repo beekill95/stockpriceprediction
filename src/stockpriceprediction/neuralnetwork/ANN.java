@@ -299,6 +299,8 @@ public class ANN {
             result[0/*row*/] = ann[NUM_LAYER - 1].outputArr[0];
 //            System.out.println("expected: " + tuple.expectedOutput + " Output is: " + ann[NUM_LAYER - 1].outputArr[0]);
         //}
+        
+        
         return result;
     }
 

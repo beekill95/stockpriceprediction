@@ -44,11 +44,11 @@ public class PCA {
     
     public PCA(double[][] normalizedDataSet, double cummulativePercentageThreshold) {
         this.centralizedData = centralizeData(normalizedDataSet);
-        //double[][] covarianceMatrix = BasicStatistics.covarianceMatrix(normalizedDataSet);
-        double[][] correlationMatrix = BasicStatistics.correlationMatrix(centralizedData);
+        double[][] covarianceMatrix = BasicStatistics.covarianceMatrix(centralizedData);
+        //double[][] correlationMatrix = BasicStatistics.correlationMatrix(centralizedData);
         
-        //originalEigenVectorsValues = calculateEigenvectorsAndEigenvalues(covarianceMatrix);
-        originalEigenVectorsValues = calculateEigenvectorsAndEigenvalues(correlationMatrix);
+        originalEigenVectorsValues = calculateEigenvectorsAndEigenvalues(covarianceMatrix);
+        //originalEigenVectorsValues = calculateEigenvectorsAndEigenvalues(correlationMatrix);
         PCAHelper.bubbleSort(originalEigenVectorsValues);
         
         reducedEigenVectorsValues = reducePrincipalComponents(originalEigenVectorsValues, cummulativePercentageThreshold);

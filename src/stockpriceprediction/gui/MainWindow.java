@@ -151,7 +151,7 @@ public class MainWindow extends javax.swing.JFrame
         double[][] trainingData = dataSetPanel.getTrainingData();
         final NeuralNetworkConfiguration currentConfig = networkModelPanel.getCurrentConfiguration();
         Pair<double[][], double[][]> data = divideTest(trainingData, currentConfig.getTrainingPercentage());
-        final int numOfBlock = 1;
+        final int numOfBlock = 2;
         if (trainingData != null /*true*/) {
             ann = new ANN(
                     /* num input */ trainingData.length - 1,
@@ -175,14 +175,41 @@ public class MainWindow extends javax.swing.JFrame
                     
                     // check the result
                     //double[][] predictResult = new double[data.second.length][1];
-                    double[][] predictResult = new double[trainingData.length][1];
-                    for (int i = numOfBlock - 1; i < /*data.second.length*/ trainingData.length; ++i) {
-                        double[][] row = new double[numOfBlock][trainingData[i].length];
-                        for (int j = 0; j < numOfBlock; ++j)
-                            row[j] = trainingData[i - j];
+//                    double[][] predictResult = new double[trainingData.length][1];
+//                    for (int i = numOfBlock - 1; i < /*data.second.length*/ trainingData.length; ++i) {
+//                        double[][] row = new double[numOfBlock][trainingData[i].length];
+//                        for (int j = 0; j < numOfBlock; ++j)
+//                            row[j] = trainingData[i - j];
+//                        
+//                        predictResult[i] = ann.predict(row);
+//                    }
+                    
+                    double[][] predictResult = new double[data.second.length - numOfBlock + 1][1];
+//                    double sumError = 0.0;
+//                    double minError = Double.POSITIVE_INFINITY;
+//                    double maxError = Double.NEGATIVE_INFINITY;
+                    int current = numOfBlock - 1;
+                    for (int i = 0; i < predictResult.length; ++i) {
+                        double[][] row = new double[numOfBlock][data.second[i].length];
+                        int rowIndex = 0;
+                        for (int j = current - numOfBlock + 1; j <= current; ++j) {
+                            row[rowIndex] = data.second[j];
+                            rowIndex++;
+                        }
+                        current++;
                         
                         predictResult[i] = ann.predict(row);
+//                        double diff = Math.abs(predictResult[i][0] - row[numOfBlock-1][data.second[i].length - 1]);
+//                        
+//                        if (diff < minError)
+//                            minError = diff;
+//                        
+//                        if (diff > maxError)
+//                            maxError = diff;
+//                        
+//                        sumError += diff;
                     }
+                    
                     
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
@@ -192,8 +219,23 @@ public class MainWindow extends javax.swing.JFrame
                                 realValues[i] = dataSetPanel.toOriginalData(trainingData[i][trainingData[0].length - 1]);
                             
                             double[] predictedValues = new double[predictResult.length];
-                            for (int i = 0; i < predictedValues.length; ++i)
+                            double sumError = 0.0;
+                            double minError = Double.POSITIVE_INFINITY;
+                            double maxError = Double.NEGATIVE_INFINITY;
+                            for (int i = 0; i < predictedValues.length; ++i) {
                                 predictedValues[i] = dataSetPanel.toOriginalData(predictResult[i][0]);
+                            
+                                double diff = Math.abs(predictedValues[i] - realValues[i + realValues.length - predictedValues.length]);
+                                if (diff < minError)
+                                    minError = diff;
+                                if (diff > maxError)
+                                    maxError = diff;
+                                sumError += diff;
+                            }
+                    
+                            System.out.println("Max error in testing: " + maxError);
+                            System.out.println("Min error in testing: " + minError);
+                            System.out.println("Mean error in testing: " + sumError / predictedValues.length);
                             
                             resultPanel.onTrainFinished(realValues, predictedValues);
                         }

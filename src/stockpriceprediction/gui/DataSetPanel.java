@@ -261,7 +261,7 @@ public class DataSetPanel extends javax.swing.JPanel {
     private TableDataSet dataSet;
     
     private void fileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileButtonActionPerformed
-        JFileChooser fileChooser = new JFileChooser("../");
+        JFileChooser fileChooser = new JFileChooser(".");
         int returnValue = fileChooser.showOpenDialog(null);
         
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -353,7 +353,7 @@ public class DataSetPanel extends javax.swing.JPanel {
     
     private void calculateAndDisplayPCAResult(TableDataSet dataSet) {
         double[][] dataWithoutClosePrice = removeClosePrice(normalizedData);
-        pca = new PCA(dataWithoutClosePrice, 0.98);
+        pca = new PCA(dataWithoutClosePrice, 0.99);
         dataSetInReducedPca = pca.getDataInReducedPrincipalComponents();
         
         displayEigenValuesAndItsContribution(pca.getEigenVectorsValues());
