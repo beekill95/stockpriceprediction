@@ -337,9 +337,9 @@ public class DataSetPanel extends javax.swing.JPanel {
     }
     
     private static double[][] removeClosePrice(double[][] data) {
-        double[][] dataWithoutClosePrice = new double[data.length - 1][data[0].length];
+        double[][] dataWithoutClosePrice = new double[data.length - 2][data[0].length];
         
-        for (int i = 0; i < data.length; ++i) {
+        for (int i = 0; i < data.length - 1; ++i) {
             if (i == ClosedPriceIndex)
                 continue;
             
